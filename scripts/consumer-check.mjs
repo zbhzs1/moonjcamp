@@ -9,7 +9,7 @@ const parent = path.join(root, ".interop");
 fs.mkdirSync(parent, {recursive: true});
 const directory = fs.mkdtempSync(path.join(parent, "consumer-"));
 const moon = process.env.MOON_BIN || "moon";
-fs.writeFileSync(path.join(directory, "moon.mod.json"), JSON.stringify({name: "local/independent-consumer", version: "0.1.0", deps: {"zbhzs1/moonjcamp": "0.1.0"}}, null, 2));
+fs.writeFileSync(path.join(directory, "moon.mod"), 'name = "local/independent-consumer"\nversion = "0.1.0"\nimport {\n  "zbhzs1/moonjcamp@0.1.0",\n}\n');
 fs.writeFileSync(path.join(directory, "moon.pkg"), 'import {\n  "zbhzs1/moonjcamp" @jcamp,\n}\noptions("is-main": true)\n');
 const input = fs.readFileSync(path.join(root, "examples/data/ir-compressed.jdx"), "utf8");
 fs.writeFileSync(path.join(directory, "main.mbt"), `///|\nfn main {\n  let response = @jcamp.handle_request({"operation": "read", "text": ${JSON.stringify(input)}})\n  println(response.stringify())\n}\n`);
