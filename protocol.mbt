@@ -13,6 +13,48 @@ fn run_request(request : Json) -> Json raise JcampError {
       ignore(json_object(request, ["operation", "text", "read_options"], "inspect request"))
       Json(inspect(json_string(fields, "text"), options=read))
     }
+    "summary" => {
+      ignore(json_object(request, ["operation", "text", "read_options", "policy"], "summary request"))
+      let policy = parse_quality_policy(fields.get("policy").unwrap_or({}))
+      let summaries : Array[Summary] = []
+      for spectrum in read_spectra(json_string(fields, "text"), options=read) { summaries.push(summarize(spectrum, policy~)) }
+      { "spectra": Json(summaries), "accepted": summaries.iter().all(s => s.accepted) }
+    }
+    "batch" => {
+      ignore(json_object(request, ["operation", "inputs", "read_options", "policy"], "batch request"))
+      guard json_field(fields, "inputs") is Array(values) && values.length() <= read.limits.max_blocks else { reject("BATCH_SIZE", "inputs must be a bounded array") }
+      let inputs : Array[BatchInput] = []
+      for value in values {
+        let input = json_object(value, ["name", "text"], "batch input")
+        inputs.push({ name: json_string(input, "name"), text: json_string(input, "text") })
+      }
+      Json(inspect_batch(inputs, policy=parse_quality_policy(fields.get("policy").unwrap_or({})), options=read))
+    }
+    "to-csv" => {
+      ignore(json_object(request, ["operation", "text", "read_options"], "CSV export request"))
+      let spectra = read_spectra(json_string(fields, "text"), options=read)
+      guard spectra.length() == 1 else { reject("CSV_SINGLE", "split a compound document before CSV export") }
+      Json(export_csv(spectra[0]))
+    }
+    "from-csv" => {
+      ignore(json_object(request, ["operation", "text", "metadata", "write_options"], "CSV import request"))
+      { "text": write_spectrum(import_csv(json_string(fields, "text"), json_field(fields, "metadata")), options=write) }
+    }
+    "transform" => {
+      ignore(json_object(request, ["operation", "text", "actions", "read_options", "write_options"], "transform request"))
+      guard json_field(fields, "actions") is Array(actions) && !actions.is_empty() && actions.length() <= 100 else { reject("TRANSFORM_ACTIONS", "actions must contain between 1 and 100 operations") }
+      let spectra = read_spectra(json_string(fields, "text"), options=read)
+      let result : Array[Spectrum] = []
+      let mut total = 0
+      for spectrum in spectra {
+        let mut value = spectrum
+        for action in actions { value = apply_action(value, action) }
+        guard value.points.length() <= read.limits.max_points - total else { reject("LIMIT_POINTS", "transformed collection exceeds point budget") }
+        total += value.points.length()
+        result.push(value)
+      }
+      { "text": if result.length() == 1 { write_spectrum(result[0], options=write) } else { write_collection(result, options=write) } }
+    }
     "write" => {
       ignore(json_object(request, ["operation", "spectrum", "write_options"], "write request"))
       { "text": write_spectrum(spectrum_from_json(json_field(fields, "spectrum")), options=write) }
@@ -50,6 +92,36 @@ fn run_request(request : Json) -> Json raise JcampError {
       { "text": render_document(combine_documents(documents, title~)) }
     }
     _ => reject("REQUEST_OPERATION", "unknown operation: " + operation)
+  }
+}
+
+///|
+fn apply_action(spectrum : Spectrum, action : Json) -> Spectrum raise JcampError {
+  guard action is Object(fields) else { reject("JSON_OBJECT", "transform action must be an object") }
+  let operation = json_string(fields, "operation")
+  fn required_double(key : String) -> Double raise JcampError {
+    ignore(json_field(fields, key))
+    json_double(fields, key, 0.0)
+  }
+  match operation {
+    "crop" => {
+      ignore(json_object(action, ["operation", "minimum", "maximum"], "crop action"))
+      crop(spectrum, required_double("minimum"), required_double("maximum"))
+    }
+    "resample" => {
+      ignore(json_object(action, ["operation", "start", "end", "count"], "resample action"))
+      ignore(json_field(fields, "count"))
+      resample(spectrum, required_double("start"), required_double("end"), json_int(fields, "count", 0))
+    }
+    "convert-x" => {
+      ignore(json_object(action, ["operation", "target"], "X conversion action"))
+      convert_x(spectrum, json_string(fields, "target"))
+    }
+    "convert-y" => {
+      ignore(json_object(action, ["operation", "target"], "Y conversion action"))
+      convert_y(spectrum, json_string(fields, "target"))
+    }
+    _ => reject("TRANSFORM_OPERATION", "unknown transform: " + operation)
   }
 }
 

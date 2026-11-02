@@ -80,3 +80,27 @@ pub extend Spectrum with @json.FromJson::{from_json}
 pub extend Report with @debug.Debug::{to_repr}
 ///|
 pub extend Report with ToJson::{to_json}
+///|
+pub extend QualityPolicy with @debug.Debug::{to_repr}
+///|
+pub extend QualityPolicy with ToJson::{to_json}
+///|
+pub extend Summary with @debug.Debug::{to_repr}
+///|
+pub extend Summary with ToJson::{to_json}
+///|
+pub extend BatchInput with @debug.Debug::{to_repr}
+///|
+pub extend BatchInput with ToJson::{to_json}
+///|
+pub extend BatchItem with @debug.Debug::{to_repr}
+///|
+pub extend BatchItem with ToJson::{to_json}
+///|
+pub extend BatchReport with @debug.Debug::{to_repr}
+///|
+pub extend BatchReport with ToJson::{to_json}
+///|
+pub extend CsvBundle with @debug.Debug::{to_repr}
+///|
+pub extend CsvBundle with ToJson::{to_json}
