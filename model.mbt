@@ -116,7 +116,13 @@ pub(all) struct Document {
 pub(all) struct Point {
   x : Double
   y : Double?
-} derive(Eq, @debug.Debug, ToJson, @json.FromJson)
+} derive(Eq, @debug.Debug, @json.FromJson)
+
+///|
+pub impl ToJson for Point with fn to_json(self) {
+  let y : Json = match self.y { Some(y) => Json(y); None => Json::null() }
+  { "x": Json(self.x), "y": y }
+}
 
 ///|
 pub(all) struct Spectrum {

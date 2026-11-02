@@ -64,7 +64,7 @@ fn writable_record(record : Record) -> Unit raise JcampError {
   let label = trim(record.label)
   guard label != "" && !label.contains("=") && !label.contains("#") && !label.contains("$$") &&
     label.iter().all(c => c >= ' ' && c != '\u007f') else { reject("WRITE_LABEL", "record label contains a delimiter or control character", line=record.line) }
-  guard !record.value.contains("\r") && !record.value.contains("\u0000") && !record.value.contains("$$") else { reject("WRITE_VALUE", "record value contains a control or comment delimiter", line=record.line) }
+  guard record.value.iter().all(c => c == '\n' || c == '\t' || (c >= ' ' && c != '\u007f')) && !record.value.contains("$$") else { reject("WRITE_VALUE", "record value contains a control or comment delimiter", line=record.line) }
   for line in record.value.split("\n") {
     guard !trim(line.to_owned()).has_prefix("##") else { reject("WRITE_INJECTION", "continuation value would inject a label", line=record.line) }
   }

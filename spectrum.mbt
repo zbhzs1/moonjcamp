@@ -93,8 +93,10 @@ fn paired_points(block : Block, table : DataTable, options : ParseOptions) -> Ar
   let count = point_count(block.records, options, block.start_line)
   let (xfactor, yfactor) = scaling(block)
   let points : Array[Point] = []
+  guard options.limits.max_points <= 1073741823 else { reject("OPTION_LIMIT", "point budget is too large") }
+  let row_options = { ..options, limits: { ..options.limits, max_points: options.limits.max_points * 2 } }
   for row in table.rows {
-    let decoded = decode_line(row.text, options, row.line)
+    let decoded = decode_line(row.text, row_options, row.line)
     guard !decoded.uses_difference && decoded.values.length() % 2 == 0 else { reject("PAIR_ARITY", "explicit pair rows require complete absolute X,Y pairs", line=row.line) }
     let mut i = 0
     while i < decoded.values.length() {
