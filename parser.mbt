@@ -98,7 +98,7 @@ pub fn parse_document(text : String, options~ : ParseOptions = ParseOptions::def
     blocks.push(read_block(state, 1))
   }
   guard !blocks.is_empty() else { reject("DOCUMENT_EMPTY", "document contains no JCAMP blocks") }
-  { blocks }
+  { blocks, }
 }
 
 ///|
