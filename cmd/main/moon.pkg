@@ -1,5 +1,7 @@
 import {
   "zbhzs1/moonjcamp" @jcamp,
 }
+
 pkgtype(kind: "executable")
+
 supported_targets = "+js"

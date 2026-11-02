@@ -1,0 +1,6 @@
+[
+  {"operation": "crop", "minimum": 1001, "maximum": 1007},
+  {"operation": "resample", "start": 1001, "end": 1007, "count": 13},
+  {"operation": "convert-x", "target": "NM"},
+  {"operation": "convert-y", "target": "%TRANSMITTANCE"}
+]

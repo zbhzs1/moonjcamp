@@ -1,0 +1,60 @@
+name: Check Build Test And Interoperability
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      external_archive:
+        description: Fetch historical IUPAC samples without redistribution
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install MoonBit on Linux
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Install MoonBit on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Invoke-RestMethod https://cli.moonbitlang.com/install/powershell.ps1 | Invoke-Expression
+          "$env:USERPROFILE\.moon\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: moon version --all
+      - run: moon fmt --check
+      - run: moon check --target js --deny-warn
+      - run: moon test --target js
+      - run: moon test --target wasm-gc
+      - run: moon build --target js --release
+      - run: moon run examples/basic --target js
+      - run: moon run examples/basic --target wasm-gc
+      - run: node scripts/cli-test.mjs
+      - run: python -m pip install numpy==2.4.4
+      - run: python scripts/interop.py
+      - run: python scripts/archive-check.py
+        if: inputs.external_archive
+      - run: node scripts/source-count.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verification-${{ matrix.os }}
+          path: evidence/generated/*.json
+          if-no-files-found: error
+          retention-days: 30

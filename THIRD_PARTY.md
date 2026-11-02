@@ -15,7 +15,7 @@ not included in this source package or counted as project code.
 
 - Python jcamp: https://github.com/nzhagen/jcamp
 - Pinned reference commit: 9a4af7d3f0cf6aa8d27913426334dec1f5b06130
-- Reference code license: MIT, see upstream LICENSE.txt.
+- Reference code license: MIT, see upstream LICENSE.rst.
 
 The reference runs as a separate test tool. Its Python implementation is not
 embedded in, translated line-by-line into, or required at runtime by MoonJCAMP.

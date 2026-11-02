@@ -1,0 +1,371 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "zbhzs1/moonjcamp"
+
+import {
+  "moonbitlang/core/debug",
+  "moonbitlang/core/json",
+}
+
+// Values
+pub fn audit(String, policy? : AuditPolicy, options? : ParseOptions) -> AuditReport
+
+pub fn audit_document(Document, policy? : AuditPolicy, options? : ParseOptions) -> AuditReport raise JcampError
+
+pub fn block_kind(Block) -> String
+
+pub fn block_title(Block) -> String
+
+pub fn canonical_label(String) -> String
+
+pub fn combine_documents(Array[Document], title? : String, read_options? : ParseOptions) -> Document raise JcampError
+
+pub fn compare_documents(String, String, options? : ParseOptions, compare_records? : Bool, max_issues? : Int32) -> Comparison raise JcampError
+
+pub fn compare_spectra(Array[Spectrum], Array[Spectrum], options? : ParseOptions, compare_records? : Bool, max_issues? : Int32) -> Comparison raise JcampError
+
+pub fn convert_x(Spectrum, String) -> Spectrum raise JcampError
+
+pub fn convert_y(Spectrum, String) -> Spectrum raise JcampError
+
+pub fn crop(Spectrum, Double, Double) -> Spectrum raise JcampError
+
+pub fn decode_numbers(String, mode? : NumericMode, max_values? : Int32) -> Array[Double?] raise JcampError
+
+pub fn document_block_count(Document, max_depth? : Int32) -> Int32 raise JcampError
+
+pub fn edit_metadata(Spectrum, Array[MetadataEdit]) -> Spectrum raise JcampError
+
+pub fn export_csv(Spectrum) -> CsvBundle raise JcampError
+
+pub fn export_json(Array[Spectrum]) -> Json raise JcampError
+
+pub fn handle_request(Json) -> Json
+
+pub fn import_csv(String, Json) -> Spectrum raise JcampError
+
+pub fn import_json(Json) -> Array[Spectrum] raise JcampError
+
+pub fn inspect(String, options? : ParseOptions) -> Report
+
+pub fn inspect_batch(Array[BatchInput], policy? : QualityPolicy, options? : ParseOptions) -> BatchReport raise JcampError
+
+pub fn parse_csv(String) -> Array[Array[String]] raise JcampError
+
+pub fn parse_document(String, options? : ParseOptions) -> Document raise JcampError
+
+pub fn parse_interchange(String) -> Array[Spectrum] raise JcampError
+
+pub fn protocol(String) -> String
+
+pub fn read_spectra(String, options? : ParseOptions) -> Array[Spectrum] raise JcampError
+
+pub fn record_value(Array[Record], String) -> String?
+
+pub fn render_document(Document, read_options? : ParseOptions) -> String raise JcampError
+
+pub fn resample(Spectrum, Double, Double, Int32) -> Spectrum raise JcampError
+
+pub fn rewrite_document(Document, options? : WriteOptions, read_options? : ParseOptions) -> String raise JcampError
+
+pub fn set_record(Array[Record], String, String) -> Array[Record]
+
+pub fn spectra_from_document(Document, options? : ParseOptions) -> Array[Spectrum] raise JcampError
+
+pub fn spectrum_from_block(Block, options? : ParseOptions) -> Spectrum raise JcampError
+
+pub fn spectrum_from_json(Json) -> Spectrum raise JcampError
+
+pub fn split_document(Document, read_options? : ParseOptions) -> Array[Document] raise JcampError
+
+pub fn summarize(Spectrum, policy? : QualityPolicy) -> Summary raise JcampError
+
+pub fn write_collection(Array[Spectrum], title? : String, options? : WriteOptions) -> String raise JcampError
+
+pub fn write_spectrum(Spectrum, options? : WriteOptions) -> String raise JcampError
+
+// Errors
+pub(all) suberror JcampError {
+  Invalid(Diagnostic)
+} derive(@debug.Debug)
+pub fn JcampError::to_repr(Self) -> @debug.Repr
+
+// Types and methods
+pub(all) struct AuditPolicy {
+  require_origin : Bool
+  require_owner : Bool
+  check_extrema : Bool
+  check_nmr_metadata : Bool
+  max_diagnostics : Int32
+} derive(ToJson, @debug.Debug)
+pub fn AuditPolicy::default() -> Self
+pub fn AuditPolicy::to_json(Self) -> Json
+pub fn AuditPolicy::to_repr(Self) -> @debug.Repr
+
+pub(all) struct AuditReport {
+  valid : Bool
+  spectra : Int32
+  errors : Int32
+  warnings : Int32
+  truncated : Bool
+  diagnostics : Array[Diagnostic]
+} derive(ToJson, @debug.Debug)
+pub fn AuditReport::to_json(Self) -> Json
+pub fn AuditReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct BatchInput {
+  name : String
+  text : String
+} derive(ToJson, @debug.Debug)
+pub fn BatchInput::to_json(Self) -> Json
+pub fn BatchInput::to_repr(Self) -> @debug.Repr
+
+pub(all) struct BatchItem {
+  name : String
+  accepted : Bool
+  spectra : Array[Summary]
+  diagnostics : Array[Diagnostic]
+} derive(ToJson, @debug.Debug)
+pub fn BatchItem::to_json(Self) -> Json
+pub fn BatchItem::to_repr(Self) -> @debug.Repr
+
+pub(all) struct BatchReport {
+  accepted : Int32
+  rejected : Int32
+  items : Array[BatchItem]
+} derive(ToJson, @debug.Debug)
+pub fn BatchReport::to_json(Self) -> Json
+pub fn BatchReport::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Block {
+  records : Array[Record]
+  tables : Array[DataTable]
+  children : Array[Block]
+  start_line : Int32
+  end_line : Int32
+} derive(ToJson, @debug.Debug)
+pub fn Block::to_json(Self) -> Json
+pub fn Block::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Comparison {
+  equivalent : Bool
+  compared_points : Int32
+  issue_count : Int32
+  truncated : Bool
+  issues : Array[ComparisonIssue]
+} derive(ToJson, @debug.Debug)
+pub fn Comparison::to_json(Self) -> Json
+pub fn Comparison::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ComparisonIssue {
+  code : String
+  message : String
+  spectrum : Int32
+  point : Int32
+} derive(ToJson, @debug.Debug)
+pub fn ComparisonIssue::to_json(Self) -> Json
+pub fn ComparisonIssue::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CsvBundle {
+  csv : String
+  metadata : Json
+} derive(ToJson, @debug.Debug)
+pub fn CsvBundle::to_json(Self) -> Json
+pub fn CsvBundle::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DataLine {
+  text : String
+  line : Int32
+} derive(Eq, ToJson, @debug.Debug)
+pub fn DataLine::equal(Self, Self) -> Bool
+pub fn DataLine::not_equal(Self, Self) -> Bool
+pub fn DataLine::to_json(Self) -> Json
+pub fn DataLine::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DataTable {
+  label : String
+  descriptor : String
+  rows : Array[DataLine]
+  line : Int32
+} derive(Eq, ToJson, @debug.Debug)
+pub fn DataTable::equal(Self, Self) -> Bool
+pub fn DataTable::not_equal(Self, Self) -> Bool
+pub fn DataTable::to_json(Self) -> Json
+pub fn DataTable::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Diagnostic {
+  severity : Severity
+  code : String
+  message : String
+  line : Int32
+  column : Int32
+} derive(Eq, ToJson, @debug.Debug)
+pub fn Diagnostic::equal(Self, Self) -> Bool
+pub fn Diagnostic::not_equal(Self, Self) -> Bool
+pub fn Diagnostic::to_json(Self) -> Json
+pub fn Diagnostic::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Document {
+  blocks : Array[Block]
+} derive(ToJson, @debug.Debug)
+pub fn Document::to_json(Self) -> Json
+pub fn Document::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Encoding {
+  Plain
+  Packed
+  Squeezed
+  Difference
+} derive(Eq, ToJson, @debug.Debug)
+pub fn Encoding::equal(Self, Self) -> Bool
+pub fn Encoding::not_equal(Self, Self) -> Bool
+pub fn Encoding::to_json(Self) -> Json
+pub fn Encoding::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Limits {
+  max_chars : Int32
+  max_lines : Int32
+  max_line_chars : Int32
+  max_records : Int32
+  max_blocks : Int32
+  max_depth : Int32
+  max_points : Int32
+  max_tokens_per_line : Int32
+} derive(Eq, ToJson, @debug.Debug)
+pub fn Limits::default() -> Self
+pub fn Limits::equal(Self, Self) -> Bool
+pub fn Limits::not_equal(Self, Self) -> Bool
+pub fn Limits::to_json(Self) -> Json
+pub fn Limits::to_repr(Self) -> @debug.Repr
+
+pub(all) enum MetadataEdit {
+  Set(String, String)
+  Remove(String)
+} derive(@debug.Debug)
+pub fn MetadataEdit::to_repr(Self) -> @debug.Repr
+
+pub(all) enum NumericMode {
+  Auto
+  Affn
+  Asdf
+} derive(Eq, ToJson, @debug.Debug)
+pub fn NumericMode::equal(Self, Self) -> Bool
+pub fn NumericMode::not_equal(Self, Self) -> Bool
+pub fn NumericMode::to_json(Self) -> Json
+pub fn NumericMode::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ParseOptions {
+  limits : Limits
+  numeric_mode : NumericMode
+  relative_tolerance : Double
+  absolute_tolerance : Double
+} derive(ToJson, @debug.Debug)
+pub fn ParseOptions::default() -> Self
+pub fn ParseOptions::to_json(Self) -> Json
+pub fn ParseOptions::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Point {
+  x : Double
+  y : Double?
+} derive(Eq, @debug.Debug, @json.FromJson)
+pub fn Point::equal(Self, Self) -> Bool
+pub fn Point::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
+pub fn Point::not_equal(Self, Self) -> Bool
+pub fn Point::to_json(Self) -> Json
+pub fn Point::to_repr(Self) -> @debug.Repr
+pub impl ToJson for Point
+
+pub(all) struct QualityPolicy {
+  max_missing_fraction : Double
+  require_monotone : Bool
+  require_uniform : Bool
+  min_points : Int32
+} derive(ToJson, @debug.Debug)
+pub fn QualityPolicy::default() -> Self
+pub fn QualityPolicy::to_json(Self) -> Json
+pub fn QualityPolicy::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Record {
+  label : String
+  value : String
+  line : Int32
+} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+pub fn Record::equal(Self, Self) -> Bool
+pub fn Record::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
+pub fn Record::not_equal(Self, Self) -> Bool
+pub fn Record::to_json(Self) -> Json
+pub fn Record::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Report {
+  valid : Bool
+  spectra : Int32
+  points : Int32
+  missing : Int32
+  diagnostics : Array[Diagnostic]
+} derive(ToJson, @debug.Debug)
+pub fn Report::to_json(Self) -> Json
+pub fn Report::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Severity {
+  Error
+  Warning
+} derive(Eq, ToJson, @debug.Debug)
+pub fn Severity::equal(Self, Self) -> Bool
+pub fn Severity::not_equal(Self, Self) -> Bool
+pub fn Severity::to_json(Self) -> Json
+pub fn Severity::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Spectrum {
+  title : String
+  data_type : String
+  x_units : String
+  y_units : String
+  points : Array[Point]
+  records : Array[Record]
+  source_line : Int32
+} derive(ToJson, @debug.Debug, @json.FromJson)
+pub fn Spectrum::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
+pub fn Spectrum::to_json(Self) -> Json
+pub fn Spectrum::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Summary {
+  title : String
+  points : Int32
+  missing : Int32
+  x_min : Double
+  x_max : Double
+  y_min : Double?
+  y_max : Double?
+  y_mean : Double?
+  direction : Int32
+  uniform : Bool
+  longest_missing_run : Int32
+  diagnostics : Array[Diagnostic]
+  accepted : Bool
+} derive(ToJson, @debug.Debug)
+pub fn Summary::to_json(Self) -> Json
+pub fn Summary::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TableStyle {
+  Automatic
+  Incremental
+  Pairs
+} derive(Eq, ToJson, @debug.Debug)
+pub fn TableStyle::equal(Self, Self) -> Bool
+pub fn TableStyle::not_equal(Self, Self) -> Bool
+pub fn TableStyle::to_json(Self) -> Json
+pub fn TableStyle::to_repr(Self) -> @debug.Repr
+
+pub(all) struct WriteOptions {
+  encoding : Encoding
+  table_style : TableStyle
+  points_per_line : Int32
+  x_factor : Double
+  y_factor : Double
+} derive(ToJson, @debug.Debug)
+pub fn WriteOptions::default() -> Self
+pub fn WriteOptions::to_json(Self) -> Json
+pub fn WriteOptions::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

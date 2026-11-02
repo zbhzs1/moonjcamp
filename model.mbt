@@ -9,8 +9,8 @@ pub(all) struct Diagnostic {
   severity : Severity
   code : String
   message : String
-  line : Int
-  column : Int
+  line : Int32
+  column : Int32
 } derive(Eq, @debug.Debug, ToJson)
 
 ///|
@@ -35,14 +35,14 @@ pub(all) enum Encoding {
 
 ///|
 pub(all) struct Limits {
-  max_chars : Int
-  max_lines : Int
-  max_line_chars : Int
-  max_records : Int
-  max_blocks : Int
-  max_depth : Int
-  max_points : Int
-  max_tokens_per_line : Int
+  max_chars : Int32
+  max_lines : Int32
+  max_line_chars : Int32
+  max_records : Int32
+  max_blocks : Int32
+  max_depth : Int32
+  max_points : Int32
+  max_tokens_per_line : Int32
 } derive(Eq, @debug.Debug, ToJson)
 
 ///|
@@ -81,13 +81,13 @@ pub fn ParseOptions::default() -> ParseOptions {
 pub(all) struct Record {
   label : String
   value : String
-  line : Int
+  line : Int32
 } derive(Eq, @debug.Debug, ToJson, @json.FromJson)
 
 ///|
 pub(all) struct DataLine {
   text : String
-  line : Int
+  line : Int32
 } derive(Eq, @debug.Debug, ToJson)
 
 ///|
@@ -95,7 +95,7 @@ pub(all) struct DataTable {
   label : String
   descriptor : String
   rows : Array[DataLine]
-  line : Int
+  line : Int32
 } derive(Eq, @debug.Debug, ToJson)
 
 ///|
@@ -103,8 +103,8 @@ pub(all) struct Block {
   records : Array[Record]
   tables : Array[DataTable]
   children : Array[Block]
-  start_line : Int
-  end_line : Int
+  start_line : Int32
+  end_line : Int32
 } derive(@debug.Debug, ToJson)
 
 ///|
@@ -120,7 +120,10 @@ pub(all) struct Point {
 
 ///|
 pub impl ToJson for Point with fn to_json(self) {
-  let y : Json = match self.y { Some(y) => Json(y); None => Json::null() }
+  let y : Json = match self.y {
+    Some(y) => Json(y)
+    None => Json::null()
+  }
   { "x": Json(self.x), "y": y }
 }
 
@@ -132,21 +135,26 @@ pub(all) struct Spectrum {
   y_units : String
   points : Array[Point]
   records : Array[Record]
-  source_line : Int
+  source_line : Int32
 } derive(@debug.Debug, ToJson, @json.FromJson)
 
 ///|
 pub(all) struct Report {
   valid : Bool
-  spectra : Int
-  points : Int
-  missing : Int
+  spectra : Int32
+  points : Int32
+  missing : Int32
   diagnostics : Array[Diagnostic]
 } derive(@debug.Debug, ToJson)
 
 ///|
-fn[T] reject(code : String, message : String, line~ : Int = 0, column~ : Int = 1) -> T raise JcampError {
-  raise Invalid({ severity: Error, code, message, line, column })
+fn[T] reject(
+  code : String,
+  message : String,
+  line~ : Int32 = 0,
+  column~ : Int32 = 1,
+) -> T raise JcampError {
+  raise Invalid({ severity: Error, code, message, line, column, })
 }
 
 ///|
@@ -157,18 +165,35 @@ fn finite(value : Double) -> Bool {
 ///|
 fn close(a : Double, b : Double, options : ParseOptions) -> Bool {
   let scale = if a.abs() > b.abs() { a.abs() } else { b.abs() }
-  (a - b).abs() <= options.absolute_tolerance + options.relative_tolerance * scale
+  (a - b).abs() <=
+  options.absolute_tolerance + options.relative_tolerance * scale
 }
 
 ///|
 fn check_options(options : ParseOptions) -> Unit raise JcampError {
   let l = options.limits
-  for limit in [l.max_chars, l.max_lines, l.max_line_chars, l.max_records, l.max_blocks, l.max_depth, l.max_points, l.max_tokens_per_line] {
-    guard limit > 0 else { reject("OPTION_LIMIT", "resource budgets must be positive") }
+  for
+    limit in [
+      l.max_chars,
+      l.max_lines,
+      l.max_line_chars,
+      l.max_records,
+      l.max_blocks,
+      l.max_depth,
+      l.max_points,
+      l.max_tokens_per_line,
+    ] {
+    guard limit > 0 else {
+      reject("OPTION_LIMIT", "resource budgets must be positive")
+    }
   }
-  guard l.max_depth <= 128 else { reject("OPTION_DEPTH", "maximum nesting may not exceed 128") }
-  guard finite(options.relative_tolerance) && finite(options.absolute_tolerance) &&
-    options.relative_tolerance >= 0.0 && options.absolute_tolerance >= 0.0 else {
+  guard l.max_depth <= 128 else {
+    reject("OPTION_DEPTH", "maximum nesting may not exceed 128")
+  }
+  guard finite(options.relative_tolerance) &&
+    finite(options.absolute_tolerance) &&
+    options.relative_tolerance >= 0.0 &&
+    options.absolute_tolerance >= 0.0 else {
     reject("OPTION_TOLERANCE", "tolerances must be finite and nonnegative")
   }
 }

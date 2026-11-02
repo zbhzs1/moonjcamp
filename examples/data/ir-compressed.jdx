@@ -1,0 +1,16 @@
+##TITLE=Synthetic IR compressed demonstration
+##JCAMP-DX=5.01
+##DATA TYPE=INFRARED SPECTRUM
+##ORIGIN=MoonJCAMP synthetic example, not an experimental measurement
+##$SAMPLE=demo-001
+##XUNITS=1/CM
+##YUNITS=ABSORBANCE
+##XFACTOR=1
+##YFACTOR=0.1
+##FIRSTX=1000
+##LASTX=1008
+##NPOINTS=9
+##XYDATA=(X++(Y..Y))
+1000 A0JV
+1004 A4JV
+##END=

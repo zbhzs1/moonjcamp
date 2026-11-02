@@ -1,0 +1,10 @@
+##TITLE=Synthetic Raman irregular example
+##JCAMP-DX=5.01
+##DATA TYPE=RAMAN SPECTRUM
+##ORIGIN=MoonJCAMP synthetic example, not an experimental measurement
+##XUNITS=1/CM
+##YUNITS=COUNTS
+##NPOINTS=4
+##XYPOINTS=(XY..XY)
+100,2; 101.5,?; 105,4; 108,3
+##END=

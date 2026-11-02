@@ -1,0 +1,5 @@
+import {
+  "zbhzs1/moonjcamp" @jcamp,
+}
+
+pkgtype(kind: "executable")
