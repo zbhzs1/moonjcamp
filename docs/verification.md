@@ -42,6 +42,12 @@ optional archive gate with workflow_dispatch's external_archive input.
 
 ## Remaining Limits
 
+After publication, `node scripts/consumer-check.mjs` creates a new module whose
+only dependency is registry version zbhzs1/moonjcamp@0.1.0, runs moon update,
+checks it, and executes it on JS and wasm-gc without a local path override.
+Set MOON_BIN when using an isolated toolchain. The CI manual published_consumer
+input enables the same registry-install check after the version is available.
+
 This is not an official conformance suite or instrument-vendor certification.
 Fully ambiguous AFFN E/exponent versus ASDF E digit tables require a caller
 mode override. Legacy nonstandard headers, NTUPLES and multidimensional data
