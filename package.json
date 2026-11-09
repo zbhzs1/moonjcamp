@@ -1,0 +1,10 @@
+{
+  "name": "moonjcamp-interop-tests",
+  "private": true,
+  "type": "module",
+  "scripts": { "interop": "node scripts/roundtrip.mjs" },
+  "devDependencies": {
+    "convert-to-jcamp": "7.0.2",
+    "jcampconverter": "9.0.1"
+  }
+}

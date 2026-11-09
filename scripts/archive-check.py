@@ -60,7 +60,7 @@ def main():
     np.testing.assert_array_equal(np.trunc(vectors["TESTSPEC.DX"][:, 1]), vectors["BRUKDIF.DX"][:, 1])
     report = dict(archive=f"IUPAC/JCAMP-DX@{REV}", passed=results,
                   equivalent_encodings=["BRUKAFFN.DX", "BRUKPAC.DX", "BRUKSQZ.DX"],
-                  limitation="Python input has $$ comments and outer whitespace stripped; MoonBit receives original files. TESTSPEC truncated toward zero is checked exactly against integer BRUKDIF, not against the crashing Python reader. BRUKDIF differs from BRUKAFFN. BRUKER1.JCM has an empty label name on line 4 and is outside strict profile. Not a complete conformance suite.")
+                  limitation="Python input has $$ comments and outer whitespace stripped; MoonBit receives original files. TESTSPEC truncated toward zero is checked exactly against integer BRUKDIF, not against the crashing Python reader. BRUKDIF differs from BRUKAFFN. Other archive files are not covered by this script. Not a complete conformance suite.")
     out = ROOT / "evidence" / "generated"
     out.mkdir(parents=True, exist_ok=True)
     (out / "archive.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

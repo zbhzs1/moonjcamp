@@ -1,3 +1,4 @@
 * text=auto eol=lf
 *.jdx text eol=lf
 *.dx text eol=lf
+examples/roundtrip/*.jdx -text

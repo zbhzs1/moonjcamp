@@ -50,7 +50,16 @@ try {
   fs.writeFileSync(file("invalid-utf8.jdx"), Buffer.from([0xff,0xfe,0x00]));
   run(["inspect", file("invalid-utf8.jdx")], 2);
   run(["inspect", tmp], 2);
-  console.log(`Three complete workflows and ${checks} CLI process checks passed.`);
+  // Strict conformance is deliberately distinct from tolerant legacy parsing.
+  const original = "examples/roundtrip/producer-original.jdx";
+  const normalized = "examples/roundtrip/moon-normalized.jdx";
+  assert.equal(JSON.parse(run(["validate-ir", normalized])).valid, true);
+  run(["validate-ir", original], 1);
+  run(["export-ir", original, "--out", file("strict.jdx")]);
+  assert.equal(JSON.parse(run(["validate-ir", file("strict.jdx")])).valid, true);
+  assert.equal(JSON.parse(run(["verify", original, file("strict.jdx")])).equivalent, true);
+  run(["export-ir", ir], 1); // No OWNER supplied: do not invent provenance.
+  console.log(`Four complete workflows and ${checks} CLI process checks passed.`);
 } finally {
   // Only the fresh directory created by mkdtemp above is removed.
   fs.rmSync(tmp, {recursive: true, force: true});
