@@ -1,7 +1,9 @@
-# Version 0.1 Compatibility Profile
+# Version 0.2 Compatibility Profile
 
-Status: implemented and locally verified for version 0.1.0, not a complete
-standards-conformance claim. See verification.md for independent test limits.
+The standard target and executable requirements are now defined separately in
+[conformance.md](conformance.md): JCAMP-DX 4.24 simple IR spectrum CORE exchange.
+This page describes the broader compatibility API, not full 5.00/5.01 conformance.
+See verification.md for independent test limits.
 
 The first release targets one-dimensional real-valued JCAMP-DX spectral
 interchange. Raw label/data records retain original labels and decoded values;
@@ -15,7 +17,7 @@ Implemented release surfaces:
 | XYDATA=(X++(Y..Y)) | Scaled X/Y arrays, point-count and row-anchor checks |
 | XYPOINTS=(XY..XY) and PEAK TABLE=(XY..XY) | Explicit pairs, irregular axes and missing ordinates |
 | AFFN/PAC/SQZ/DIF/DUP | Per-token fixtures, bounded expansion and independent differential tests |
-| DIF row transitions | Repeated terminal Y checkpoint and matching X position |
+| DIF row transitions | Repeated terminal Y only after a DIF-ending row; final absolute checkpoint on output |
 | LINK compound blocks | Nesting, BLOCKS cardinality, split/combine and metadata preservation |
 | Rewriting | Declared encoding, derived axis fields and read-back equivalence |
 | File workflows | Instrument import, batch admission checks, and transformed re-export |
@@ -52,4 +54,7 @@ Structural inspection is separate from metadata audit and admission policy.
 For example, inspect can accept a parseable file with stale MAXY; audit reports
 the mismatch, and summary/batch evaluate missingness and sampling policies.
 Missing ORIGIN/OWNER is a warning unless a library AuditPolicy requires it.
+The strict `validate_ir_424` gate requires both and complete CORE metadata;
+`inspect` does not. General writers allow LF/Unicode descriptive metadata, while
+`write_ir_424` requires printable ASCII and emits <=80-column CRLF lines.
 Audit history is descriptive provenance, not a cryptographic signature.

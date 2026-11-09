@@ -2,13 +2,19 @@
 
 JCAMP-DX spectral data interchange and validation in MoonBit.
 
-MoonJCAMP 0.1.0 reads, checks and rewrites one-dimensional real spectra. It
+MoonJCAMP 0.2.0 reads, checks and rewrites one-dimensional real spectra. It
 implements JCAMP-DX label records, scaled XYDATA and explicit pairs,
 AFFN/PAC/SQZ/DIF/DUP numbers, DIF checkpoints, and nested LINK documents.
 It includes metadata audits, compound split/combine, versioned JSON and CSV
 exchange, bounded transformations, quality admission and semantic comparison.
 
-This is a scoped implementation, not complete JCAMP-DX certification, an
+The explicit standard delivery target is **JCAMP-DX 4.24 simple infrared
+spectrum CORE exchange**. The strict validator/exporter covers mandatory records,
+all ASDF numerical forms, scaled axes, and terminal DIF checkpoints. A broader
+compatibility reader accepts 4.24/5.00/5.01 declarations and LINK/peak-pair files.
+See the [standard acceptance matrix and 30 cross-tool roundtrips](docs/conformance.md).
+
+This is a scoped implementation, not complete JCAMP-family certification, an
 instrument driver, a full NMR processor or a chemical-identification system.
 See the [compatibility profile](docs/profile.md) and [related work](docs/related.md).
 
@@ -19,7 +25,7 @@ dependencies and is tested on JavaScript and wasm-gc. The filesystem CLI also
 requires Node.js 24. Python/NumPy are test-only dependencies.
 
 ```sh
-moon add zbhzs1/moonjcamp@0.1.0
+moon add zbhzs1/moonjcamp@0.2.0
 ```
 
 Add `"zbhzs1/moonjcamp" @jcamp` to your package's import block in `moon.pkg`.
@@ -47,6 +53,9 @@ node bin/moonjcamp.mjs to-json examples/data/ir-compressed.jdx --out spectrum.js
 node bin/moonjcamp.mjs from-json spectrum.json --out normalized.jdx
 node bin/moonjcamp.mjs verify examples/data/ir-compressed.jdx normalized.jdx
 moon run examples/basic --target js
+moon run examples/ir_exchange --target js
+node bin/moonjcamp.mjs validate-ir examples/roundtrip/moon-normalized.jdx
+node bin/moonjcamp.mjs export-ir examples/roundtrip/producer-original.jdx --out strict-ir.jdx
 ```
 
 Outputs are created exclusively: existing files are not overwritten. Exit
@@ -55,7 +64,11 @@ I/O/usage failures. A split/CSV operation can leave partial new output files
 if the filesystem fails partway through; it does not provide a transaction.
 `--protocol` accepts bounded UTF-8 JSON on stdin and returns one result envelope.
 
-Three reproducible file workflows are in [docs/workflows.md](docs/workflows.md).
+Three general file workflows are in [docs/workflows.md](docs/workflows.md).
+The fourth, strict IR exchange workflow is in [docs/conformance.md](docs/conformance.md).
+`validate-ir` is intentionally stricter than `inspect`: it requires a complete
+4.24 CORE, printable ASCII, <=80-column CRLF lines and final DIF checkpoints.
+`write_ir_424` / `export-ir` never invent missing ORIGIN/OWNER or crop missing data.
 Public API contracts and request examples are in [docs/api.md](docs/api.md).
 
 ## Development
@@ -70,6 +83,8 @@ moon test --target js
 moon test --target wasm-gc
 moon build --target js --release
 node scripts/cli-test.mjs
+npm ci --ignore-scripts
+node scripts/roundtrip.mjs
 python -m pip install numpy==2.4.4
 python scripts/interop.py
 node scripts/source-count.mjs
@@ -83,8 +98,9 @@ optical simulation, resampling, CSV conversion, and CLI wrappers are not claimed
 as novel algorithms. See [docs/related.md](docs/related.md).
 
 The CI checks formatting, strict type checking, building, JS/wasm-gc tests,
-both example targets, three complete CLI workflows, and a pinned independent
-Python reader/writer. Verification limits are in [docs/verification.md](docs/verification.md).
+both example targets, four complete CLI workflows, a pinned independent
+Python reader/writer and 30 raw cross-tool roundtrips. The core suite has 66
+tests on JS and wasm-gc. Verification limits are in [docs/verification.md](docs/verification.md).
 
 MIT licensed. Standards references, independent tools and external-data restrictions
 are listed in [THIRD_PARTY.md](THIRD_PARTY.md).

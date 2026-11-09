@@ -1,12 +1,18 @@
 # Verification Evidence And Limits
 
 Local baseline: MoonBit moon 0.1.20261016 / moonc 0.10.16+b1a0e846e, Node 24,
-Python 3.12 and NumPy 2.4.4. The initial suite contains 52 MoonBit tests,
-executed on JS and wasm-gc, plus 23 CLI subprocess checks and three complete
+Python 3.12 and NumPy 2.4.4. Version 0.2 contains 66 MoonBit tests,
+executed on JS and wasm-gc, plus 29 CLI subprocess checks and four complete
 workflows. CI repeats the portable checks on Linux and Windows with the
 currently distributed stable MoonBit toolchain and records its exact version.
 
 ## Independent Reader And Writer
+
+The primary new evidence is **30 unmodified cross-tool roundtrip cases** using
+the MIT releases convert-to-jcamp 7.0.2 and jcampconverter 9.0.1. See
+[conformance.md](conformance.md) for the exact target, acceptance matrix,
+checked-in original/normalized files, error bounds and reproduction commands.
+Unlike the Python cases below, emitted input text is never repaired.
 
 `python scripts/interop.py` fetches nzhagen/jcamp at commit
 9a4af7d3f0cf6aa8d27913426334dec1f5b06130 and verifies its SHA-256 before loading it.
@@ -35,16 +41,19 @@ zero is instead checked exactly against archived integer BRUKDIF data.
 BRUKAFFN/PAC/SQZ are also checked against each other. BRUKDIF contains different
 values and is not claimed equivalent to BRUKAFFN.
 
-An additional historical BRUKER1.JCM has an empty label name on line 4 and is
-rejected by this strict profile. It is not included as a passing fixture.
+The 0.1 parser rejected historical empty-name `##=` comments. Version 0.2 adds
+their parsing/rendering regression test; that does not establish compatibility
+with every other record in BRUKER1.JCM. This seven-file suite has not been expanded
+to certify the remaining archive.
 External data is not redistributed or uploaded as a CI artifact. Run the
 optional archive gate with workflow_dispatch's external_archive input.
 
 ## Remaining Limits
 
 After publication, `node scripts/consumer-check.mjs` creates a new module whose
-only dependency is registry version zbhzs1/moonjcamp@0.1.0, runs moon update,
+only dependency is registry version zbhzs1/moonjcamp@0.2.0, runs moon update,
 checks it, and executes it on JS and wasm-gc without a local path override.
+It exercises the new strict 4.24 exporter and validator on 32 decoded points.
 Set MOON_BIN when using an isolated toolchain. The CI manual published_consumer
 input enables the same registry-install check after the version is available.
 

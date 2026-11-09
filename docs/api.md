@@ -23,7 +23,7 @@ supported profile. `read_spectra` performs both. `inspect` returns the first
 structural/numerical failure as a report. `audit` additionally collects optional
 metadata inconsistencies; it does not certify measurement accuracy.
 
-`write_spectrum` and `write_collection` normalize to version 5.01 and recompute
+`write_spectrum` and `write_collection` default to version 5.01 and recompute
 axis/extrema fields. `WriteOptions` controls table shape, encoding, row width
 and factors. SQZ/DIF require factors that represent ordinates as integers
 without material rounding; they fail rather than silently quantizing.
@@ -85,3 +85,27 @@ uses `edits: [{"action":"set","label":"OWNER","value":"..."}]` or remove.
 `actions_text` / `metadata_text` can replace the corresponding parsed JSON
 field, but cannot coexist with it. Nested JSON also rejects duplicate keys.
 Protocol stdin is read incrementally with a byte budget before decoding UTF-8.
+## Strict IR Exchange (0.2)
+
+`validate_ir_424(text, options~, pure_compound~)` returns `Report` without raising.
+It checks the explicitly documented JCAMP-DX 4.24 simple-IR CORE target; it is
+not interchangeable with the tolerant `inspect` operation. A failure includes
+the first failing diagnostic and source line. `pure_compound=true` additionally
+requires a supplied CLASS record.
+
+`write_ir_424(spectrum, options~, pure_compound~)` raises `JcampError` on missing
+CORE provenance, unsupported units, invalid first data, or metadata that cannot
+fit printable ASCII/80-column lines. It sets version 4.24, narrows numerical
+rows when needed, emits CRLF, validates its own output, and never manufactures
+an owner or changes the measured interval. General `WriteOptions.version`
+accepts 4.24, 5.00 or 5.01; its default remains 5.01 for compatibility.
+
+Protocol operations: `validate-ir` accepts `text`, optional `read_options` and
+`pure_compound`; `write-ir` accepts a structured `spectrum`, optional
+`write_options` and `pure_compound`; `export-ir` accepts an existing compatible
+single-spectrum `text` and normalizes it strictly. CLI file commands are
+`validate-ir INPUT` and `export-ir INPUT [--encoding ...] [--out FILE]`.
+All use the existing result envelope and nonzero failure exit conventions.
+
+See [conformance.md](conformance.md) for units, limits, the standard matrix,
+and raw cross-tool examples. The broader API above remains supported.
