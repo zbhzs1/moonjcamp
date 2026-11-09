@@ -25,7 +25,7 @@ fn trim(text : String) -> String {
 pub fn canonical_label(label : String) -> String {
   let out = StringBuilder()
   for c in label.iter() {
-    if c != ' ' && c != '\t' && c != '-' && c != '_' {
+    if c != ' ' && c != '\t' && c != '-' && c != '_' && c != '/' {
       out.write_char(c)
     }
   }

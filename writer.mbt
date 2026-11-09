@@ -12,6 +12,7 @@ pub(all) struct WriteOptions {
   points_per_line : Int32
   x_factor : Double
   y_factor : Double
+  version : String
 } derive(@debug.Debug, ToJson)
 
 ///|
@@ -22,6 +23,7 @@ pub fn WriteOptions::default() -> WriteOptions {
     points_per_line: 8,
     x_factor: 1.0,
     y_factor: 1.0,
+    version: "5.01",
   }
 }
 
@@ -80,8 +82,7 @@ fn decimal(value : Double) -> String raise JcampError {
 ///|
 fn writable_record(record : Record) -> Unit raise JcampError {
   let label = trim(record.label)
-  guard label != "" &&
-    !label.contains("=") &&
+  guard !label.contains("=") &&
     !label.contains("#") &&
     !label.contains("$$") &&
     label.iter().all(c => c >= ' ' && c != '\u007f') else {
@@ -242,7 +243,7 @@ fn write_records(
   let last = spectrum.points[spectrum.points.length() - 1]
   let prefix : Array[Record] = [
     { label: "TITLE", value: spectrum.title, line: 0, },
-    { label: "JCAMP-DX", value: "5.01", line: 0, },
+    { label: "JCAMP-DX", value: options.version, line: 0, },
     { label: "DATA TYPE", value: spectrum.data_type, line: 0, },
     {
       label: "DATA CLASS",
@@ -395,6 +396,9 @@ pub fn write_spectrum(
   options~ : WriteOptions = WriteOptions::default(),
 ) -> String raise JcampError {
   checked_spectrum(spectrum)
+  guard ["4.24", "5.00", "5.01"].contains(options.version) else {
+    reject("WRITE_VERSION", "output version must be 4.24, 5.00 or 5.01")
+  }
   guard options.points_per_line >= 1 && options.points_per_line <= 1024 else {
     reject("WRITE_WIDTH", "points_per_line must be between 1 and 1024")
   }
@@ -447,13 +451,20 @@ pub fn write_spectrum(
           previous,
         )
         tokens.push(token)
-        differential = differential || token.1
+        differential = token.1
         previous = spectrum.points[i].y
       }
       append_encoded(out, tokens, options.encoding)
       out.write_string("\n")
       previous_difference = differential
       next = end
+    }
+    if previous_difference {
+      let last = spectrum.points[spectrum.points.length() - 1]
+      let (checkpoint, _) = ordinate(last.y, options, true, None)
+      out.write_string(
+        decimal(last.x / options.x_factor) + " " + checkpoint + "\n",
+      )
     }
   } else {
     out.write_string("##XYPOINTS=(XY..XY)\n")

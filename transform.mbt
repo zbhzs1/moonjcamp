@@ -165,7 +165,7 @@ pub fn resample(
 ///|
 fn x_unit(unit : String) -> String raise JcampError {
   match canonical_label(unit) {
-    "1/CM" | "CM1" | "CM^1" => "1/CM"
+    "1CM" | "CM1" | "CM^1" => "1/CM"
     "NM" | "NANOMETERS" => "NM"
     "UM" | "MICROMETERS" | "MICRONS" => "MICROMETERS"
     _ => reject("X_UNIT", "supported X units are 1/CM, NM and MICROMETERS")

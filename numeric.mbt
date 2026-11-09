@@ -16,6 +16,7 @@ priv struct NumericToken {
 priv struct DecodedLine {
   values : Array[Double?]
   uses_difference : Bool
+  ends_difference : Bool
   first_ordinate_absolute : Bool
 }
 
@@ -165,7 +166,12 @@ fn numeric_tokens(
         column=start + 1,
       )
     }
-    if mode != Asdf && i < text.length() && (text[i] == 'E' || text[i] == 'e') {
+    if i < text.length() &&
+      (text[i] == 'E' || text[i] == 'e') &&
+      (
+        mode != Asdf ||
+        (i + 1 < text.length() && (text[i + 1] == '+' || text[i + 1] == '-'))
+      ) {
       i += 1
       if i < text.length() && (text[i] == '+' || text[i] == '-') {
         i += 1
@@ -331,7 +337,8 @@ fn decode_line(
       }
     }
   }
-  { values, uses_difference, first_ordinate_absolute, }
+  let ends_difference = previous_token is Some(Delta(_))
+  { values, uses_difference, ends_difference, first_ordinate_absolute, }
 }
 
 ///|

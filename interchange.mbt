@@ -189,7 +189,7 @@ pub fn parse_interchange(text : String) -> Array[Spectrum] raise JcampError {
 fn parse_write_options(value : Json) -> WriteOptions raise JcampError {
   let fields = json_object(
     value,
-    ["encoding", "table", "points_per_line", "x_factor", "y_factor"],
+    ["encoding", "table", "points_per_line", "x_factor", "y_factor", "version"],
     "write options",
   )
   let encoding = match fields.get("encoding") {
@@ -211,6 +211,11 @@ fn parse_write_options(value : Json) -> WriteOptions raise JcampError {
     points_per_line: json_int(fields, "points_per_line", 8),
     x_factor: json_double(fields, "x_factor", 1.0),
     y_factor: json_double(fields, "y_factor", 1.0),
+    version: match fields.get("version") {
+      None => "5.01"
+      Some(String(value)) => value
+      _ => reject("WRITE_VERSION", "version must be a string")
+    },
   }
 }
 

@@ -13,16 +13,11 @@ fn label_record(row : DataLine) -> Record raise JcampError {
   guard text.has_prefix("##") else {
     reject("LABEL_PREFIX", "expected ## label", line=row.line)
   }
-  guard text.find("=") is Some(index) && index >= 3 else {
-    reject(
-      "LABEL_EQUALS",
-      "label requires a nonempty name and =",
-      line=row.line,
-    )
+  guard text.find("=") is Some(index) && index >= 2 else {
+    reject("LABEL_EQUALS", "label requires an = delimiter", line=row.line)
   }
   let label = trim(text[2:index].to_owned())
-  guard canonical_label(label) != "" &&
-    label.iter().all(c => c >= ' ' && c != '\u007f' && c != '#') else {
+  guard label.iter().all(c => c >= ' ' && c != '\u007f' && c != '#') else {
     reject("LABEL_NAME", "invalid label name", line=row.line)
   }
   { label, value: trim(text[index + 1:].to_owned()), line: row.line, }

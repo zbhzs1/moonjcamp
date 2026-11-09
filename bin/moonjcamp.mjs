@@ -57,12 +57,12 @@ function numeric(value, name, integer = false) {
 
 function makeRequest(positional, options) {
   const [command, ...files] = positional;
-  const commands = ["inspect", "audit", "summary", "batch", "to-json", "from-json", "rewrite", "split", "combine", "to-csv", "from-csv", "transform", "verify"];
+  const commands = ["inspect", "validate-ir", "export-ir", "audit", "summary", "batch", "to-json", "from-json", "rewrite", "split", "combine", "to-csv", "from-csv", "transform", "verify"];
   if (!commands.includes(command)) throw new Error("unknown command");
   const multiple = ["batch", "combine", "verify"].includes(command);
   if (!files.length || (!multiple && files.length !== 1)) throw new Error("unexpected number of input paths");
   if (command === "verify" && files.length !== 2) throw new Error("verify requires exactly two inputs");
-  const writeCommands = ["rewrite", "from-json", "from-csv", "transform"];
+  const writeCommands = ["rewrite", "export-ir", "from-json", "from-csv", "transform"];
   for (const name of options.keys()) {
     if (name === "out" && command !== "split") continue;
     if (name === "out-dir" && command === "split") continue;
@@ -133,7 +133,7 @@ function outputValue(command, value, options) {
 const args = process.argv.slice(2);
 try {
   if (!args.length || (args.length === 1 && args[0] === "--help")) {
-    console.log("MoonJCAMP\n  inspect|summary|to-json INPUT [--out FILE]\n  rewrite|from-json INPUT [--encoding affn|pac|sqz|difdup] [--out FILE]\n  to-csv INPUT --out FILE.csv\n  from-csv INPUT --metadata SIDECAR [--out FILE]\n  transform INPUT --actions ACTIONS.json [--out FILE]\n  split INPUT --out-dir NEW_DIRECTORY\n  combine|batch INPUT... [--out FILE]\n  --protocol  (bounded UTF-8 JSON on stdin)");
+    console.log("MoonJCAMP\n  inspect|validate-ir|summary|to-json INPUT [--out FILE]\n  rewrite|from-json INPUT [--encoding affn|pac|sqz|difdup] [--out FILE]\n  to-csv INPUT --out FILE.csv\n  from-csv INPUT --metadata SIDECAR [--out FILE]\n  transform INPUT --actions ACTIONS.json [--out FILE]\n  split INPUT --out-dir NEW_DIRECTORY\n  combine|batch INPUT... [--out FILE]\n  --protocol  (bounded UTF-8 JSON on stdin)");
     process.exit(0);
   }
   const protocolMode = args.length === 1 && args[0] === "--protocol";

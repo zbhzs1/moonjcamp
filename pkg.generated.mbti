@@ -79,7 +79,11 @@ pub fn split_document(Document, read_options? : ParseOptions) -> Array[Document]
 
 pub fn summarize(Spectrum, policy? : QualityPolicy) -> Summary raise JcampError
 
+pub fn validate_ir_424(String, options? : ParseOptions, pure_compound? : Bool) -> Report
+
 pub fn write_collection(Array[Spectrum], title? : String, options? : WriteOptions) -> String raise JcampError
+
+pub fn write_ir_424(Spectrum, options? : WriteOptions, pure_compound? : Bool) -> String raise JcampError
 
 pub fn write_spectrum(Spectrum, options? : WriteOptions) -> String raise JcampError
 
@@ -361,6 +365,7 @@ pub(all) struct WriteOptions {
   points_per_line : Int32
   x_factor : Double
   y_factor : Double
+  version : String
 } derive(ToJson, @debug.Debug)
 pub fn WriteOptions::default() -> Self
 pub fn WriteOptions::to_json(Self) -> Json

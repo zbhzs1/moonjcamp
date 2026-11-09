@@ -143,16 +143,7 @@ fn incremental_points(
       line=table.line,
     )
   }
-  if record_value(block.records, "DELTAX") is Some(value) {
-    let declared = number(value, line=table.line)
-    if count > 1 && !close(declared, step, options) {
-      reject(
-        "AXIS_STEP",
-        "DELTAX disagrees with endpoints and NPOINTS",
-        line=table.line,
-      )
-    }
-  }
+  // Section 6.3.2 defines DELTAX as nominal, not the reconstruction interval.
   let (xfactor, yfactor) = scaling(block)
   guard options.limits.max_points < 2147483647 else {
     reject("OPTION_LIMIT", "point budget is too large")
@@ -212,7 +203,7 @@ fn incremental_points(
       points.push({ x, y: scaled_y(decoded.values[i], yfactor, row.line), })
       i += 1
     }
-    previous_difference = decoded.uses_difference
+    previous_difference = decoded.ends_difference
   }
   guard points.length() == count else {
     reject(

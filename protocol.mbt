@@ -7,6 +7,64 @@ fn run_request(request : Json) -> Json raise JcampError {
   let read = parse_read_options(fields.get("read_options").unwrap_or({}))
   let write = parse_write_options(fields.get("write_options").unwrap_or({}))
   match operation {
+    "export-ir" => {
+      ignore(
+        json_object(
+          request,
+          ["operation", "text", "read_options", "write_options"],
+          "IR normalization request",
+        ),
+      )
+      let spectra = read_spectra(json_string(fields, "text"), options=read)
+      guard spectra.length() == 1 else {
+        reject("IR_SINGLE", "split compound spectra before strict IR export")
+      }
+      { "text": write_ir_424(spectra[0], options=write) }
+    }
+    "validate-ir" => {
+      ignore(
+        json_object(
+          request,
+          ["operation", "text", "read_options", "pure_compound"],
+          "IR validation request",
+        ),
+      )
+      let pure_compound = match fields.get("pure_compound") {
+        None => false
+        Some(True) => true
+        Some(False) => false
+        _ => reject("JSON_TYPE", "pure_compound must be a boolean")
+      }
+      Json(
+        validate_ir_424(
+          json_string(fields, "text"),
+          options=read,
+          pure_compound~,
+        ),
+      )
+    }
+    "write-ir" => {
+      ignore(
+        json_object(
+          request,
+          ["operation", "spectrum", "write_options", "pure_compound"],
+          "IR export request",
+        ),
+      )
+      let pure_compound = match fields.get("pure_compound") {
+        None => false
+        Some(True) => true
+        Some(False) => false
+        _ => reject("JSON_TYPE", "pure_compound must be a boolean")
+      }
+      {
+        "text": write_ir_424(
+          spectrum_from_json(json_field(fields, "spectrum")),
+          options=write,
+          pure_compound~,
+        ),
+      }
+    }
     "read" => {
       ignore(
         json_object(

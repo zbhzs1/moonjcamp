@@ -65,7 +65,7 @@ pub fn write_collection(
   for
     record in [
       { label: "TITLE", value: title, line: 0, },
-      { label: "JCAMP-DX", value: "5.01", line: 0, },
+      { label: "JCAMP-DX", value: options.version, line: 0, },
       { label: "DATA TYPE", value: "LINK", line: 0, },
       { label: "BLOCKS", value: spectra.length().to_string(), line: 0, },
     ] {
