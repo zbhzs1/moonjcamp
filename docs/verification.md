@@ -1,6 +1,6 @@
 # Verification Evidence And Limits
 
-Local baseline: MoonBit moon 0.1.20261016 / moonc 0.10.16+b1a0e846e, Node 24,
+Local baseline: MoonBit moon 0.1.20261104 / moonc 0.10.20+65efd5b93, Node 24,
 Python 3.12 and NumPy 2.4.4. Version 0.2 contains 66 MoonBit tests,
 executed on JS and wasm-gc, plus 29 CLI subprocess checks and four complete
 workflows. CI repeats the portable checks on Linux and Windows with the

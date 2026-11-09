@@ -1,11 +1,12 @@
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct AuditPolicy {
   require_origin : Bool
   require_owner : Bool
   check_extrema : Bool
   check_nmr_metadata : Bool
   max_diagnostics : Int32
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
 pub fn AuditPolicy::default() -> AuditPolicy {
@@ -19,6 +20,7 @@ pub fn AuditPolicy::default() -> AuditPolicy {
 }
 
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct AuditReport {
   valid : Bool
   spectra : Int32
@@ -26,7 +28,7 @@ pub(all) struct AuditReport {
   warnings : Int32
   truncated : Bool
   diagnostics : Array[Diagnostic]
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
 pub extend AuditPolicy with @debug.Debug::{to_repr}

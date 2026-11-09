@@ -1,11 +1,13 @@
 ///|
+#derive(Eq, @debug.Debug, ToJson)
 pub(all) enum TableStyle {
   Automatic
   Incremental
   Pairs
-} derive(Eq, @debug.Debug, ToJson)
+}
 
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct WriteOptions {
   encoding : Encoding
   table_style : TableStyle
@@ -13,7 +15,7 @@ pub(all) struct WriteOptions {
   x_factor : Double
   y_factor : Double
   version : String
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
 pub fn WriteOptions::default() -> WriteOptions {

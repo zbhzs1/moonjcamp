@@ -1,10 +1,11 @@
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct QualityPolicy {
   max_missing_fraction : Double
   require_monotone : Bool
   require_uniform : Bool
   min_points : Int32
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
 pub fn QualityPolicy::default() -> QualityPolicy {
@@ -17,6 +18,7 @@ pub fn QualityPolicy::default() -> QualityPolicy {
 }
 
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct Summary {
   title : String
   points : Int32
@@ -31,28 +33,31 @@ pub(all) struct Summary {
   longest_missing_run : Int32
   diagnostics : Array[Diagnostic]
   accepted : Bool
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct BatchInput {
   name : String
   text : String
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct BatchItem {
   name : String
   accepted : Bool
   spectra : Array[Summary]
   diagnostics : Array[Diagnostic]
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct BatchReport {
   accepted : Int32
   rejected : Int32
   items : Array[BatchItem]
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
 fn check_policy(policy : QualityPolicy) -> Unit raise JcampError {

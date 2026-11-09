@@ -1,39 +1,45 @@
 ///|
+#derive(Eq, @debug.Debug, ToJson)
 pub(all) enum Severity {
   Error
   Warning
-} derive(Eq, @debug.Debug, ToJson)
+}
 
 ///|
+#derive(Eq, @debug.Debug, ToJson)
 pub(all) struct Diagnostic {
   severity : Severity
   code : String
   message : String
   line : Int32
   column : Int32
-} derive(Eq, @debug.Debug, ToJson)
+}
 
 ///|
+#derive(@debug.Debug)
 pub(all) suberror JcampError {
   Invalid(Diagnostic)
-} derive(@debug.Debug)
+}
 
 ///|
+#derive(Eq, @debug.Debug, ToJson)
 pub(all) enum NumericMode {
   Auto
   Affn
   Asdf
-} derive(Eq, @debug.Debug, ToJson)
+}
 
 ///|
+#derive(Eq, @debug.Debug, ToJson)
 pub(all) enum Encoding {
   Plain
   Packed
   Squeezed
   Difference
-} derive(Eq, @debug.Debug, ToJson)
+}
 
 ///|
+#derive(Eq, @debug.Debug, ToJson)
 pub(all) struct Limits {
   max_chars : Int32
   max_lines : Int32
@@ -43,7 +49,7 @@ pub(all) struct Limits {
   max_depth : Int32
   max_points : Int32
   max_tokens_per_line : Int32
-} derive(Eq, @debug.Debug, ToJson)
+}
 
 ///|
 pub fn Limits::default() -> Limits {
@@ -60,12 +66,13 @@ pub fn Limits::default() -> Limits {
 }
 
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct ParseOptions {
   limits : Limits
   numeric_mode : NumericMode
   relative_tolerance : Double
   absolute_tolerance : Double
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
 pub fn ParseOptions::default() -> ParseOptions {
@@ -78,45 +85,51 @@ pub fn ParseOptions::default() -> ParseOptions {
 }
 
 ///|
+#derive(Eq, @debug.Debug, ToJson, @json.FromJson)
 pub(all) struct Record {
   label : String
   value : String
   line : Int32
-} derive(Eq, @debug.Debug, ToJson, @json.FromJson)
+}
 
 ///|
+#derive(Eq, @debug.Debug, ToJson)
 pub(all) struct DataLine {
   text : String
   line : Int32
-} derive(Eq, @debug.Debug, ToJson)
+}
 
 ///|
+#derive(Eq, @debug.Debug, ToJson)
 pub(all) struct DataTable {
   label : String
   descriptor : String
   rows : Array[DataLine]
   line : Int32
-} derive(Eq, @debug.Debug, ToJson)
+}
 
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct Block {
   records : Array[Record]
   tables : Array[DataTable]
   children : Array[Block]
   start_line : Int32
   end_line : Int32
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct Document {
   blocks : Array[Block]
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
+#derive(Eq, @debug.Debug, @json.FromJson)
 pub(all) struct Point {
   x : Double
   y : Double?
-} derive(Eq, @debug.Debug, @json.FromJson)
+}
 
 ///|
 pub impl ToJson for Point with fn to_json(self) {
@@ -128,6 +141,7 @@ pub impl ToJson for Point with fn to_json(self) {
 }
 
 ///|
+#derive(@debug.Debug, ToJson, @json.FromJson)
 pub(all) struct Spectrum {
   title : String
   data_type : String
@@ -136,16 +150,17 @@ pub(all) struct Spectrum {
   points : Array[Point]
   records : Array[Record]
   source_line : Int32
-} derive(@debug.Debug, ToJson, @json.FromJson)
+}
 
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct Report {
   valid : Bool
   spectra : Int32
   points : Int32
   missing : Int32
   diagnostics : Array[Diagnostic]
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
 fn[T] reject(

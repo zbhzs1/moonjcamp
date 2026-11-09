@@ -1,8 +1,9 @@
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct CsvBundle {
   csv : String
   metadata : Json
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
 fn csv_quote(value : String) -> String {

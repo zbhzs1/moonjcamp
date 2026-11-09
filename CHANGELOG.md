@@ -13,6 +13,8 @@
   roundtrips with pinned MIT tools, checked-in examples and CI evidence.
 - Keep broad 5.00/5.01 compatibility separate from strict IR conformance;
   document numerical limits, producer rounding and retained Python adaptations.
+- Align derive formatting with MoonBit 0.10.20; verify against the current stable
+  toolchain used in Linux and Windows CI.
 
 ## 0.1.0
 

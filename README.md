@@ -20,7 +20,7 @@ See the [compatibility profile](docs/profile.md) and [related work](docs/related
 
 ## Install And Use
 
-Requires MoonBit compiler 0.10.16 or newer. The core has no third-party runtime
+Requires MoonBit compiler 0.10.20 or newer. The core has no third-party runtime
 dependencies and is tested on JavaScript and wasm-gc. The filesystem CLI also
 requires Node.js 24. Python/NumPy are test-only dependencies.
 
@@ -73,7 +73,7 @@ Public API contracts and request examples are in [docs/api.md](docs/api.md).
 
 ## Development
 
-MoonBit compiler 0.10.16 or later is required. The core uses only MoonBit's
+MoonBit compiler 0.10.20 or later is required. The core uses only MoonBit's
 standard library. Node.js is the filesystem adapter for the portable CLI;
 Python is used only by independent tests.
 

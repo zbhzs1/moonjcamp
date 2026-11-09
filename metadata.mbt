@@ -1,8 +1,9 @@
 ///|
+#derive(@debug.Debug)
 pub(all) enum MetadataEdit {
   Set(String, String)
   Remove(String)
-} derive(@debug.Debug)
+}
 
 ///|
 pub extend MetadataEdit with @debug.Debug::{to_repr}

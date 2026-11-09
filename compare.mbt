@@ -1,19 +1,21 @@
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct ComparisonIssue {
   code : String
   message : String
   spectrum : Int32
   point : Int32
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
+#derive(@debug.Debug, ToJson)
 pub(all) struct Comparison {
   equivalent : Bool
   compared_points : Int32
   issue_count : Int32
   truncated : Bool
   issues : Array[ComparisonIssue]
-} derive(@debug.Debug, ToJson)
+}
 
 ///|
 pub extend ComparisonIssue with @debug.Debug::{to_repr}
