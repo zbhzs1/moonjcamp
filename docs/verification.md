@@ -2,7 +2,7 @@
 
 Local baseline: MoonBit moon 0.1.20261104 / moonc 0.10.20+65efd5b93, Node 24,
 Python 3.12 and NumPy 2.4.4. Published version 0.2 contains 66 MoonBit tests;
-the current 0.3 candidate contains 76, executed on JS and wasm-gc, plus 32 CLI
+version 0.3 contains 76, executed on JS and wasm-gc, plus 32 CLI
 subprocess checks and five complete workflows. CI repeats the portable checks
 on Linux and Windows with the
 currently distributed stable MoonBit toolchain and records its exact version.
@@ -52,9 +52,10 @@ optional archive gate with workflow_dispatch's external_archive input.
 ## Remaining Limits
 
 After publication, `node scripts/consumer-check.mjs` creates a new module whose
-only dependency is registry version zbhzs1/moonjcamp@0.2.0, runs moon update,
+only dependency is registry version zbhzs1/moonjcamp@0.3.0, runs moon update,
 checks it, and executes it on JS and wasm-gc without a local path override.
-It exercises the new strict 4.24 exporter and validator on 32 decoded points.
+It exercises the strict 4.24 exporter/validator on 32 decoded points and the
+new NTUPLES APIs on two pages of four samples each.
 Set MOON_BIN when using an isolated toolchain. The CI manual published_consumer
 input enables the same registry-install check after the version is available.
 

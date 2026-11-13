@@ -2,9 +2,8 @@
 
 ## Release Status
 
-The published Mooncakes package 0.2.0 does not include this feature. It is
-implemented in the current GitHub source as a 0.3.0 candidate; the package must
-be released before registry users can import these APIs. This is a constrained
+The 0.2.0 package did not include this feature. Version 0.3.0 introduces the
+following constrained
 interop profile, not a claim that MoonJCAMP implements all JCAMP-DX 5.00/5.01
 protocols.
 

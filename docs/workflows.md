@@ -52,7 +52,7 @@ and invalid UTF-8. It is the cross-platform regression test for these workflows.
 
 ## Complex NMR NTUPLES
 
-The unreleased 0.3 source profile adds a fifth workflow:
+The 0.3 NTUPLES profile adds a fifth workflow:
 
 ```sh
 node bin/moonjcamp.mjs read-ntuples examples/data/complex-fid-ntuples.jdx

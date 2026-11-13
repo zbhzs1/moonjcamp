@@ -37,7 +37,7 @@ reserved private label and refuses collisions rather than overwriting it.
 The current source tree also exposes `read_ntuples`, `write_ntuples` and
 `rewrite_ntuples`. These operate on the bounded profile in [ntuples.md](ntuples.md),
 not arbitrary NTUPLES documents. The published 0.2.0 package does not contain
-these APIs; they are part of the unreleased 0.3.0 candidate.
+these APIs; they are new in version 0.3.0.
 
 ## Exchange And Transformations
 

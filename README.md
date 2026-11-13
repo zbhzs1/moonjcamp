@@ -2,7 +2,7 @@
 
 JCAMP-DX spectral data interchange and validation in MoonBit.
 
-MoonJCAMP 0.2.0 reads, checks and rewrites one-dimensional real spectra. It
+MoonJCAMP 0.3.0 reads, checks and rewrites one-dimensional real spectra. It
 implements JCAMP-DX label records, scaled XYDATA and explicit pairs,
 AFFN/PAC/SQZ/DIF/DUP numbers, DIF checkpoints, and nested LINK documents.
 It includes metadata audits, compound split/combine, versioned JSON and CSV
@@ -20,9 +20,8 @@ See the [compatibility profile](docs/profile.md) and [related work](docs/related
 
 ## NMR NTUPLES Source Profile
 
-The published 0.2.0 registry package does not interpret NTUPLES or PAGE. The
-current GitHub source tree contains a 0.3.0 candidate with typed reading and
-rewriting for one bounded profile: 5.00/5.01 complex NMR FID or spectrum,
+The 0.2.0 release did not interpret NTUPLES or PAGE. Version 0.3.0 adds typed
+reading and rewriting for one bounded profile: 5.00/5.01 complex NMR FID or spectrum,
 variables X/R/I/N, two mapped real/imaginary pages, uniform axis, XYDATA tables,
 and AFFN/ASDF dependent forms. It checks dimensions, ranges, ordering, scaling,
 finite dense values and aggregate point budgets. Arbitrary NTUPLES layouts and
@@ -37,7 +36,7 @@ dependencies and is tested on JavaScript and wasm-gc. The filesystem CLI also
 requires Node.js 24. Python/NumPy are test-only dependencies.
 
 ```sh
-moon add zbhzs1/moonjcamp@0.2.0
+moon add zbhzs1/moonjcamp@0.3.0
 ```
 
 Add `"zbhzs1/moonjcamp" @jcamp` to your package's import block in `moon.pkg`.

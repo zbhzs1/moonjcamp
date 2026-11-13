@@ -1,8 +1,8 @@
 # Compatibility Profiles
 
-The published 0.2.0 release's standard target and executable requirements are
+The 0.2.0 release's standard target and executable requirements are
 defined separately in [conformance.md](conformance.md): JCAMP-DX 4.24 simple IR
-spectrum CORE exchange. The current source tree also contains an unreleased,
+spectrum CORE exchange. Version 0.3.0 also contains a
 bounded 5.00/5.01 complex NMR NTUPLES/PAGE profile described in
 [ntuples.md](ntuples.md). Neither surface claims full JCAMP-DX family
 conformance. See verification.md for independent test limits.
@@ -26,7 +26,7 @@ Implemented release surfaces:
 
 The current source tree adds typed NTUPLES and PAGE reading/writing only for
 the bounded two-page complex 1D NMR profile in [ntuples.md](ntuples.md). This
-code is not part of the published 0.2.0 package yet. Arbitrary NTUPLES layouts,
+code was not part of the 0.2.0 package. Arbitrary NTUPLES layouts,
 multidimensional NMR, molecular structures, vendor-private binary payloads and
 measurement calibration are unsupported. Recognized out-of-profile tables
 must produce an unsupported-feature error, not an apparently successful empty

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 (Unreleased)
+## 0.3.0
 
 - Add typed variables, page mapping and read/write/rewrite APIs for the bounded
   5.00/5.01 one-dimensional complex NMR FID/SPECTRUM NTUPLES profile.
