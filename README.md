@@ -18,6 +18,19 @@ This is a scoped implementation, not complete JCAMP-family certification, an
 instrument driver, a full NMR processor or a chemical-identification system.
 See the [compatibility profile](docs/profile.md) and [related work](docs/related.md).
 
+## Planned Scope
+
+The current 5.00/5.01 reader is compatibility parsing for the existing
+one-dimensional real-spectrum model; it does not interpret NTUPLES or PAGE and
+does not claim complete NMR conformance. Planned work is to add a versioned
+5.00 NMR profile and its 5.01 extension, then typed NTUPLES variables and
+PAGE-based FID component exchange with shape validation and roundtrip fixtures.
+Multidimensional NMR
+will be a separately named, source-audited extension profile: the 5.01 paper
+describes a multidimensional protocol as future work, not a completed standard.
+Each stage will have explicit supported records, rejected cases and CI tests.
+See the [compatibility roadmap](docs/profile.md#planned-roadmap).
+
 ## Install And Use
 
 Requires MoonBit compiler 0.10.20 or newer. The core has no third-party runtime

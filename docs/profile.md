@@ -22,11 +22,40 @@ Implemented release surfaces:
 | Rewriting | Declared encoding, derived axis fields and read-back equivalence |
 | File workflows | Instrument import, batch admission checks, and transformed re-export |
 
-NTUPLES, multidimensional/complex NMR, FID processing, molecular structures,
-vendor-private binary payloads and measurement calibration are future work.
-Recognized out-of-profile tables must produce an unsupported-feature error,
-not an apparently successful empty spectrum. Unknown descriptive labels are
-retained. Source-private records are data, never executable instructions.
+NTUPLES, PAGE, NMR FID components, multidimensional/complex NMR, molecular
+structures, vendor-private binary payloads and measurement calibration are not
+implemented by this release. Recognized out-of-profile tables must produce an
+unsupported-feature error, not an apparently successful empty spectrum.
+Unknown descriptive labels are retained. Source-private records are data,
+never executable instructions.
+
+## Planned Roadmap
+
+These are proposed additions, not current API behavior or a claim of full
+JCAMP-DX conformance:
+
+1. Define separate executable conformance profiles for 4.24 simple IR, the
+   5.00 NMR protocol and its 5.01 extension. Validate datatype-specific records
+   rather than treating a version declaration as proof of support; preserve
+   unsupported labels without assigning invented semantics.
+2. Add a typed NTUPLES model for variable names, roles, forms, dimensions,
+   units, factors and ranges. Parse and write the published 5.01 PAGE example
+   for one-dimensional NMR FID real/imaginary components, validate page indices
+   and dimensions, and prove parse-write-parse equivalence with checked-in
+   fixtures and independent readers where available.
+3. Survey published, interoperable multidimensional NMR conventions before
+   defining a separately named extension profile. Its first bounded target is
+   real-valued 2D data with explicit axis order, shape, units, factors, page
+   mapping and resource limits. Include roundtrip and malformed-shape tests.
+
+The 1999 JCAMP-DX 5.01 recommendation (DOI
+[10.1351/pac199971081549](https://doi.org/10.1351/pac199971081549), sections
+5-6) includes a one-dimensional NMR FID NTUPLES/PAGE example and describes a
+multidimensional protocol as future work that had not yet been defined or
+tested. Accordingly, a project-defined 2D profile must be labeled as an
+extension, not as official 5.01 multidimensional conformance. Each milestone
+will publish its supported subset, explicit rejection behavior, examples and
+CI results before its scope is advertised as implemented.
 
 AFFN exponent notation and ASDF E/e digit codes can be ambiguous in legacy
 files. Automatic decoding selects ASDF for an entire table if any row needs
