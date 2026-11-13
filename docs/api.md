@@ -34,6 +34,11 @@ re-encodes it. These are not byte-exact archival operations.
 can be supplied for ambiguous legacy number streams. Split provenance uses a
 reserved private label and refuses collisions rather than overwriting it.
 
+The current source tree also exposes `read_ntuples`, `write_ntuples` and
+`rewrite_ntuples`. These operate on the bounded profile in [ntuples.md](ntuples.md),
+not arbitrary NTUPLES documents. The published 0.2.0 package does not contain
+these APIs; they are part of the unreleased 0.3.0 candidate.
+
 ## Exchange And Transformations
 
 `export_json` / `import_json` use `moonjcamp/spectra/1`. Every exported point
@@ -68,8 +73,9 @@ all mismatches; spectrum/point indices are zero-based, -1 means not applicable.
 
 The executable exposes `protocol(text)` and `handle_request(Json)`. Successful
 responses have `ok: true, value: ...`; rejected requests have `ok: false, error`.
-Accepted operations: read, inspect, audit, summary, batch, write, from-json,
-rewrite, split, combine, to-csv, from-csv, transform and verify.
+Accepted operations: read, read-ntuples, inspect, audit, summary, batch, write,
+from-json, rewrite, rewrite-ntuples, split, combine, to-csv, from-csv,
+transform and verify.
 
 ```json
 {"operation":"transform","text":"...JCAMP...","actions":[{"operation":"crop","minimum":1000,"maximum":2000}]}
@@ -79,6 +85,10 @@ rewrite, split, combine, to-csv, from-csv, transform and verify.
 absolute_tolerance. `write_options` accepts encoding, table, points_per_line,
 x_factor and y_factor. Summary/batch accept a `policy` object. Library-only
 AuditPolicy controls stricter provenance and audit limits.
+
+For `rewrite-ntuples`, `write_options` accepts only `encoding` and
+`points_per_line`; dependent `VAR_FORM` declarations are updated to match the
+chosen AFFN or ASDF encoding.
 
 Transform actions: crop, resample, convert-x, convert-y, edit-metadata. The last
 uses `edits: [{"action":"set","label":"OWNER","value":"..."}]` or remove.

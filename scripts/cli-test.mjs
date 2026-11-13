@@ -59,7 +59,13 @@ try {
   assert.equal(JSON.parse(run(["validate-ir", file("strict.jdx")])).valid, true);
   assert.equal(JSON.parse(run(["verify", original, file("strict.jdx")])).equivalent, true);
   run(["export-ir", ir], 1); // No OWNER supplied: do not invent provenance.
-  console.log(`Four complete workflows and ${checks} CLI process checks passed.`);
+  const ntuples = "examples/data/complex-fid-ntuples.jdx";
+  const parsedNtuples = JSON.parse(run(["read-ntuples", ntuples]));
+  assert.equal(parsedNtuples.pages.length, 2);
+  assert.equal(parsedNtuples.pages[0].points.length, 4);
+  run(["rewrite-ntuples", ntuples, "--encoding", "sqz", "--width", "4", "--out", file("ntuples.jdx")]);
+  assert.deepEqual(JSON.parse(run(["read-ntuples", file("ntuples.jdx")])).pages, parsedNtuples.pages);
+  console.log(`Five complete workflows and ${checks} CLI process checks passed.`);
 } finally {
   // Only the fresh directory created by mkdtemp above is removed.
   fs.rmSync(tmp, {recursive: true, force: true});

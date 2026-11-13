@@ -57,6 +57,8 @@ pub fn parse_interchange(String) -> Array[Spectrum] raise JcampError
 
 pub fn protocol(String) -> String
 
+pub fn read_ntuples(String, options? : ParseOptions) -> NtupleDataset raise JcampError
+
 pub fn read_spectra(String, options? : ParseOptions) -> Array[Spectrum] raise JcampError
 
 pub fn record_value(Array[Record], String) -> String?
@@ -66,6 +68,8 @@ pub fn render_document(Document, read_options? : ParseOptions) -> String raise J
 pub fn resample(Spectrum, Double, Double, Int32) -> Spectrum raise JcampError
 
 pub fn rewrite_document(Document, options? : WriteOptions, read_options? : ParseOptions) -> String raise JcampError
+
+pub fn rewrite_ntuples(String, read_options? : ParseOptions, write_options? : NtupleWriteOptions) -> String raise JcampError
 
 pub fn set_record(Array[Record], String, String) -> Array[Record]
 
@@ -84,6 +88,8 @@ pub fn validate_ir_424(String, options? : ParseOptions, pure_compound? : Bool) -
 pub fn write_collection(Array[Spectrum], title? : String, options? : WriteOptions) -> String raise JcampError
 
 pub fn write_ir_424(Spectrum, options? : WriteOptions, pure_compound? : Bool) -> String raise JcampError
+
+pub fn write_ntuples(NtupleDataset, options? : NtupleWriteOptions) -> String raise JcampError
 
 pub fn write_spectrum(Spectrum, options? : WriteOptions) -> String raise JcampError
 
@@ -263,6 +269,59 @@ pub(all) enum MetadataEdit {
   Remove(String)
 }
 pub fn MetadataEdit::to_repr(Self) -> @debug.Repr
+
+#derive(@debug.Debug, @json.ToJson)
+pub(all) struct NtupleDataset {
+  title : String
+  version : String
+  data_type : String
+  ntuples_type : String
+  records : Array[Record]
+  variables : Array[NtupleVariable]
+  pages : Array[NtuplePage]
+  source_line : Int32
+}
+pub fn NtupleDataset::to_json(Self) -> @json.Json
+pub fn NtupleDataset::to_repr(Self) -> @debug.Repr
+
+#derive(Eq, @debug.Debug, @json.ToJson)
+pub(all) struct NtuplePage {
+  number : Int32
+  variable_symbol : String
+  points : Array[Point]
+}
+pub fn NtuplePage::equal(Self, Self) -> Bool
+pub fn NtuplePage::not_equal(Self, Self) -> Bool
+pub fn NtuplePage::to_json(Self) -> @json.Json
+pub fn NtuplePage::to_repr(Self) -> @debug.Repr
+
+#derive(Eq, @debug.Debug, @json.ToJson)
+pub(all) struct NtupleVariable {
+  name : String
+  symbol : String
+  role : String
+  form : String
+  dimension : Int32
+  units : String
+  first : Double
+  last : Double
+  minimum : Double
+  maximum : Double
+  factor : Double
+}
+pub fn NtupleVariable::equal(Self, Self) -> Bool
+pub fn NtupleVariable::not_equal(Self, Self) -> Bool
+pub fn NtupleVariable::to_json(Self) -> @json.Json
+pub fn NtupleVariable::to_repr(Self) -> @debug.Repr
+
+#derive(@debug.Debug, @json.ToJson)
+pub(all) struct NtupleWriteOptions {
+  encoding : Encoding
+  points_per_line : Int32
+}
+pub fn NtupleWriteOptions::default() -> Self
+pub fn NtupleWriteOptions::to_json(Self) -> @json.Json
+pub fn NtupleWriteOptions::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug, @json.ToJson)
 pub(all) enum NumericMode {

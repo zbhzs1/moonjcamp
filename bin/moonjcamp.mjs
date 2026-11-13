@@ -57,7 +57,7 @@ function numeric(value, name, integer = false) {
 
 function makeRequest(positional, options) {
   const [command, ...files] = positional;
-  const commands = ["inspect", "validate-ir", "export-ir", "audit", "summary", "batch", "to-json", "from-json", "rewrite", "split", "combine", "to-csv", "from-csv", "transform", "verify"];
+  const commands = ["inspect", "validate-ir", "export-ir", "read-ntuples", "rewrite-ntuples", "audit", "summary", "batch", "to-json", "from-json", "rewrite", "split", "combine", "to-csv", "from-csv", "transform", "verify"];
   if (!commands.includes(command)) throw new Error("unknown command");
   const multiple = ["batch", "combine", "verify"].includes(command);
   if (!files.length || (!multiple && files.length !== 1)) throw new Error("unexpected number of input paths");
@@ -69,6 +69,7 @@ function makeRequest(positional, options) {
     if (name === "metadata" && command === "from-csv") continue;
     if (name === "actions" && command === "transform") continue;
     if (["numeric-mode", "max-points"].includes(name) && !["from-json", "from-csv", "combine"].includes(command)) continue;
+    if (["encoding", "width"].includes(name) && command === "rewrite-ntuples") continue;
     if (["encoding", "table", "width", "x-factor", "y-factor"].includes(name) && writeCommands.includes(command)) continue;
     throw new Error(`--${name} is not applicable to ${command}`);
   }
@@ -133,7 +134,7 @@ function outputValue(command, value, options) {
 const args = process.argv.slice(2);
 try {
   if (!args.length || (args.length === 1 && args[0] === "--help")) {
-    console.log("MoonJCAMP\n  inspect|validate-ir|summary|to-json INPUT [--out FILE]\n  rewrite|from-json INPUT [--encoding affn|pac|sqz|difdup] [--out FILE]\n  to-csv INPUT --out FILE.csv\n  from-csv INPUT --metadata SIDECAR [--out FILE]\n  transform INPUT --actions ACTIONS.json [--out FILE]\n  split INPUT --out-dir NEW_DIRECTORY\n  combine|batch INPUT... [--out FILE]\n  --protocol  (bounded UTF-8 JSON on stdin)");
+    console.log("MoonJCAMP\n  inspect|validate-ir|summary|to-json INPUT [--out FILE]\n  read-ntuples INPUT\n  rewrite-ntuples INPUT [--encoding affn|pac|sqz|difdup] [--width N] [--out FILE]\n  rewrite|from-json INPUT [--encoding affn|pac|sqz|difdup] [--out FILE]\n  to-csv INPUT --out FILE.csv\n  from-csv INPUT --metadata SIDECAR [--out FILE]\n  transform INPUT --actions ACTIONS.json [--out FILE]\n  split INPUT --out-dir NEW_DIRECTORY\n  combine|batch INPUT... [--out FILE]\n  --protocol  (bounded UTF-8 JSON on stdin)");
     process.exit(0);
   }
   const protocolMode = args.length === 1 && args[0] === "--protocol";

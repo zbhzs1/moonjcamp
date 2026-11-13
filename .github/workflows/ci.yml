@@ -8,6 +8,10 @@ on:
         description: Fetch historical IUPAC samples without redistribution
         type: boolean
         default: false
+      ntuples_archive:
+        description: Fetch pinned two-page historical NMR NTUPLES cases
+        type: boolean
+        default: false
       published_consumer:
         description: Install the released package in a fresh independent module
         type: boolean
@@ -51,13 +55,18 @@ jobs:
       - run: moon run examples/basic --target wasm-gc
       - run: moon run examples/ir_exchange --target js
       - run: moon run examples/ir_exchange --target wasm-gc
+      - run: moon run examples/ntuples --target js
+      - run: moon run examples/ntuples --target wasm-gc
       - run: node scripts/cli-test.mjs
       - run: npm ci --ignore-scripts
       - run: node scripts/roundtrip.mjs
+      - run: node scripts/ntuple-roundtrip.mjs
       - run: python -m pip install numpy==2.4.4
       - run: python scripts/interop.py
       - run: python scripts/archive-check.py
         if: inputs.external_archive
+      - run: node scripts/ntuple-archive-check.mjs
+        if: inputs.ntuples_archive
       - run: node scripts/source-count.mjs
       - run: node scripts/consumer-check.mjs
         if: inputs.published_consumer

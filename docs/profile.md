@@ -1,9 +1,11 @@
-# Version 0.2 Compatibility Profile
+# Compatibility Profiles
 
-The standard target and executable requirements are now defined separately in
-[conformance.md](conformance.md): JCAMP-DX 4.24 simple IR spectrum CORE exchange.
-This page describes the broader compatibility API, not full 5.00/5.01 conformance.
-See verification.md for independent test limits.
+The published 0.2.0 release's standard target and executable requirements are
+defined separately in [conformance.md](conformance.md): JCAMP-DX 4.24 simple IR
+spectrum CORE exchange. The current source tree also contains an unreleased,
+bounded 5.00/5.01 complex NMR NTUPLES/PAGE profile described in
+[ntuples.md](ntuples.md). Neither surface claims full JCAMP-DX family
+conformance. See verification.md for independent test limits.
 
 The first release targets one-dimensional real-valued JCAMP-DX spectral
 interchange. Raw label/data records retain original labels and decoded values;
@@ -22,33 +24,33 @@ Implemented release surfaces:
 | Rewriting | Declared encoding, derived axis fields and read-back equivalence |
 | File workflows | Instrument import, batch admission checks, and transformed re-export |
 
-NTUPLES, PAGE, NMR FID components, multidimensional/complex NMR, molecular
-structures, vendor-private binary payloads and measurement calibration are not
-implemented by this release. Recognized out-of-profile tables must produce an
-unsupported-feature error, not an apparently successful empty spectrum.
-Unknown descriptive labels are retained. Source-private records are data,
-never executable instructions.
+The current source tree adds typed NTUPLES and PAGE reading/writing only for
+the bounded two-page complex 1D NMR profile in [ntuples.md](ntuples.md). This
+code is not part of the published 0.2.0 package yet. Arbitrary NTUPLES layouts,
+multidimensional NMR, molecular structures, vendor-private binary payloads and
+measurement calibration are unsupported. Recognized out-of-profile tables
+must produce an unsupported-feature error, not an apparently successful empty
+spectrum. Unknown descriptive labels are retained. Source-private records are
+data, never executable instructions.
 
 ## Planned Roadmap
 
 These are proposed additions, not current API behavior or a claim of full
 JCAMP-DX conformance:
 
-1. Define separate executable conformance profiles for 4.24 simple IR, the
-   5.00 NMR protocol and its 5.01 extension. Validate datatype-specific records
-   rather than treating a version declaration as proof of support; preserve
-   unsupported labels without assigning invented semantics.
-2. Add a typed NTUPLES model for variable names, roles, forms, dimensions,
-   units, factors and ranges. Parse and write the published 5.01 PAGE example
-   for one-dimensional NMR FID real/imaginary components, validate page indices
-   and dimensions, and prove parse-write-parse equivalence with checked-in
-   fixtures and independent readers where available.
-3. Survey published, interoperable multidimensional NMR conventions before
+1. Complete the versioned 5.00 NMR protocol and 5.01 extension beyond the
+   bounded NTUPLES/PAGE profile currently in the source tree. Audit additional
+   datatype-specific records and define separate executable profiles rather
+   than treating a version declaration as proof of support.
+2. Survey published, interoperable multidimensional NMR conventions before
    defining a separately named extension profile. Its first bounded target is
    real-valued 2D data with explicit axis order, shape, units, factors, page
    mapping and resource limits. Include roundtrip and malformed-shape tests.
 
-The 1999 JCAMP-DX 5.01 recommendation (DOI
+The current NMR profile implements the recommendation's one-dimensional
+complex FID/SPECTRUM example shape only. It is not a multidimensional reader,
+a full NMR processing toolkit or certification of all 5.00/5.01 records. The
+1999 JCAMP-DX 5.01 recommendation (DOI
 [10.1351/pac199971081549](https://doi.org/10.1351/pac199971081549), sections
 5-6) includes a one-dimensional NMR FID NTUPLES/PAGE example and describes a
 multidimensional protocol as future work that had not yet been defined or

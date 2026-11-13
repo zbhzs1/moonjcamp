@@ -17,6 +17,9 @@ exchange format. Its test-data directory includes historical copyright
 notices. Public availability does not make those datasets MIT licensed.
 External archive data is fetched only during optional interoperability checks,
 not included in this source package or counted as project code.
+The NTUPLES check fetches TESTFID.DX, TESTNTUP.DX and BRUKNTUP.DX from the
+pinned IUPAC archive revision and verifies SHA-256, subject to the same data
+restrictions. See docs/ntuples.md for numerical comparisons and reader limits.
 
 ## Independent Reference
 

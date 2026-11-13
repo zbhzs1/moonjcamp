@@ -18,18 +18,17 @@ This is a scoped implementation, not complete JCAMP-family certification, an
 instrument driver, a full NMR processor or a chemical-identification system.
 See the [compatibility profile](docs/profile.md) and [related work](docs/related.md).
 
-## Planned Scope
+## NMR NTUPLES Source Profile
 
-The current 5.00/5.01 reader is compatibility parsing for the existing
-one-dimensional real-spectrum model; it does not interpret NTUPLES or PAGE and
-does not claim complete NMR conformance. Planned work is to add a versioned
-5.00 NMR profile and its 5.01 extension, then typed NTUPLES variables and
-PAGE-based FID component exchange with shape validation and roundtrip fixtures.
-Multidimensional NMR
-will be a separately named, source-audited extension profile: the 5.01 paper
-describes a multidimensional protocol as future work, not a completed standard.
-Each stage will have explicit supported records, rejected cases and CI tests.
-See the [compatibility roadmap](docs/profile.md#planned-roadmap).
+The published 0.2.0 registry package does not interpret NTUPLES or PAGE. The
+current GitHub source tree contains a 0.3.0 candidate with typed reading and
+rewriting for one bounded profile: 5.00/5.01 complex NMR FID or spectrum,
+variables X/R/I/N, two mapped real/imaginary pages, uniform axis, XYDATA tables,
+and AFFN/ASDF dependent forms. It checks dimensions, ranges, ordering, scaling,
+finite dense values and aggregate point budgets. Arbitrary NTUPLES layouts and
+multidimensional NMR are not implemented. The 5.01 paper describes a
+multidimensional protocol as future work, not a completed standard. See the
+[profile specification](docs/ntuples.md) and [compatibility roadmap](docs/profile.md#planned-roadmap).
 
 ## Install And Use
 
@@ -65,8 +64,11 @@ node bin/moonjcamp.mjs inspect examples/data/ir-compressed.jdx
 node bin/moonjcamp.mjs to-json examples/data/ir-compressed.jdx --out spectrum.json
 node bin/moonjcamp.mjs from-json spectrum.json --out normalized.jdx
 node bin/moonjcamp.mjs verify examples/data/ir-compressed.jdx normalized.jdx
+node bin/moonjcamp.mjs read-ntuples examples/data/complex-fid-ntuples.jdx
+node bin/moonjcamp.mjs rewrite-ntuples examples/data/complex-fid-ntuples.jdx --encoding difdup --out normalized-fid.jdx
 moon run examples/basic --target js
 moon run examples/ir_exchange --target js
+moon run examples/ntuples --target js
 node bin/moonjcamp.mjs validate-ir examples/roundtrip/moon-normalized.jdx
 node bin/moonjcamp.mjs export-ir examples/roundtrip/producer-original.jdx --out strict-ir.jdx
 ```
@@ -98,6 +100,7 @@ moon build --target js --release
 node scripts/cli-test.mjs
 npm ci --ignore-scripts
 node scripts/roundtrip.mjs
+node scripts/ntuple-roundtrip.mjs
 python -m pip install numpy==2.4.4
 python scripts/interop.py
 node scripts/source-count.mjs
@@ -111,9 +114,11 @@ optical simulation, resampling, CSV conversion, and CLI wrappers are not claimed
 as novel algorithms. See [docs/related.md](docs/related.md).
 
 The CI checks formatting, strict type checking, building, JS/wasm-gc tests,
-both example targets, four complete CLI workflows, a pinned independent
-Python reader/writer and 30 raw cross-tool roundtrips. The core suite has 66
-tests on JS and wasm-gc. Verification limits are in [docs/verification.md](docs/verification.md).
+three examples on both targets, five complete CLI workflows, a pinned independent
+Python reader/writer, 30 raw cross-tool roundtrips and 12 synthetic NTUPLES
+independent-output cases. The NTUPLES archive gate
+additionally checks three pinned NMR files, four encodings and independent
+read-back. Verification limits are in [docs/verification.md](docs/verification.md).
 
 MIT licensed. Standards references, independent tools and external-data restrictions
 are listed in [THIRD_PARTY.md](THIRD_PARTY.md).

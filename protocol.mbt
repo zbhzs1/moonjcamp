@@ -7,6 +7,44 @@ fn run_request(request : Json) -> Json raise JcampError {
   let read = parse_read_options(fields.get("read_options").unwrap_or({}))
   let write = parse_write_options(fields.get("write_options").unwrap_or({}))
   match operation {
+    "read-ntuples" => {
+      ignore(
+        json_object(
+          request,
+          ["operation", "text", "read_options"],
+          "NTUPLES read request",
+        ),
+      )
+      Json(read_ntuples(json_string(fields, "text"), options=read))
+    }
+    "rewrite-ntuples" => {
+      ignore(
+        json_object(
+          request,
+          ["operation", "text", "read_options", "write_options"],
+          "NTUPLES rewrite request",
+        ),
+      )
+      if fields.get("write_options") is Some(value) {
+        ignore(
+          json_object(
+            value,
+            ["encoding", "points_per_line"],
+            "NTUPLES write options",
+          ),
+        )
+      }
+      {
+        "text": rewrite_ntuples(
+          json_string(fields, "text"),
+          read_options=read,
+          write_options={
+            encoding: write.encoding,
+            points_per_line: write.points_per_line,
+          },
+        ),
+      }
+    }
     "export-ir" => {
       ignore(
         json_object(

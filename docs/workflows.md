@@ -46,6 +46,21 @@ history steps. Audit warns about missing OWNER in these synthetic samples.
 The batch command deliberately exits 1: the Raman sample's 25% missing fraction
 exceeds the default 10% admission threshold even though the file parses.
 
-`node scripts/cli-test.mjs` runs all three paths in a fresh temporary directory
+`node scripts/cli-test.mjs` runs these paths in a fresh temporary directory
 and checks failures, no-overwrite behavior, duplicate JSON keys, numeric limits
 and invalid UTF-8. It is the cross-platform regression test for these workflows.
+
+## Complex NMR NTUPLES
+
+The unreleased 0.3 source profile adds a fifth workflow:
+
+```sh
+node bin/moonjcamp.mjs read-ntuples examples/data/complex-fid-ntuples.jdx
+node bin/moonjcamp.mjs rewrite-ntuples examples/data/complex-fid-ntuples.jdx --encoding sqz --width 4 --out normalized-ntuples.jdx
+node bin/moonjcamp.mjs read-ntuples normalized-ntuples.jdx
+moon run examples/ntuples --target js
+```
+
+Expected: real page N=1 and imaginary page N=2, each with four points. The
+CLI regression compares both arrays after normalization. These commands are
+not a generic multidimensional workflow; see [ntuples.md](ntuples.md).

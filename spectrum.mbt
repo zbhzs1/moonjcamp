@@ -16,7 +16,10 @@ fn check_headers(block : Block) -> Unit raise JcampError {
       }
       unique[key] = true
     }
-    if key == "NTUPLES" || key == "PEAKASSIGNMENTS" {
+    if key == "NTUPLES" ||
+      key == "PAGE" ||
+      key == "ENDNTUPLES" ||
+      key == "PEAKASSIGNMENTS" {
       reject(
         "UNSUPPORTED_TABLE",
         "this release does not interpret " + key,

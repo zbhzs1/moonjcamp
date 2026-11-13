@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0 (Unreleased)
+
+- Add typed variables, page mapping and read/write/rewrite APIs for the bounded
+  5.00/5.01 one-dimensional complex NMR FID/SPECTRUM NTUPLES profile.
+- Check header uniqueness, PAGE/table order, matching dimensions/axes, scaled
+  ranges, finite dense samples and aggregate point budgets.
+- Canonicalize legacy 5.0 declarations, synchronize VAR_FORM with encoding,
+  and verify written page arrays by re-reading.
+- Add pure-MoonBit and CLI examples plus regression and pinned historical
+  NMR checks with independent jcampconverter 9.0.1 output reading.
+- Document implemented scope separately from general NMR and 2D roadmap work.
+
 ## 0.2.0
 
 - Define the exact JCAMP-DX 4.24 simple IR spectrum CORE exchange target and

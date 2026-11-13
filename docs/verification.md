@@ -1,9 +1,10 @@
 # Verification Evidence And Limits
 
 Local baseline: MoonBit moon 0.1.20261104 / moonc 0.10.20+65efd5b93, Node 24,
-Python 3.12 and NumPy 2.4.4. Version 0.2 contains 66 MoonBit tests,
-executed on JS and wasm-gc, plus 29 CLI subprocess checks and four complete
-workflows. CI repeats the portable checks on Linux and Windows with the
+Python 3.12 and NumPy 2.4.4. Published version 0.2 contains 66 MoonBit tests;
+the current 0.3 candidate contains 76, executed on JS and wasm-gc, plus 32 CLI
+subprocess checks and five complete workflows. CI repeats the portable checks
+on Linux and Windows with the
 currently distributed stable MoonBit toolchain and records its exact version.
 
 ## Independent Reader And Writer
@@ -59,8 +60,13 @@ input enables the same registry-install check after the version is available.
 
 This is not an official conformance suite or instrument-vendor certification.
 Fully ambiguous AFFN E/exponent versus ASDF E digit tables require a caller
-mode override. Legacy nonstandard headers, NTUPLES and multidimensional data
-remain future compatibility work. Budgets protect ordinary offline use but
+mode override. Arbitrary NTUPLES layouts and multidimensional data remain
+future compatibility work; the implemented two-page NMR profile and its
+three-file/four-encoding evidence are specified in [ntuples.md](ntuples.md).
+That gate uses pinned historical files and independently compares normalized
+output, reversing the independent reader's Hz/ppm and vendor-offset behavior.
+It is enabled separately with the ntuples_archive workflow input.
+Budgets protect ordinary offline use but
 are not a sandbox or constant-memory streaming guarantee. Audit/provenance is
 not cryptographic authentication. Numerical methods do not validate experimental
 calibration, clinical suitability or chemical identity.

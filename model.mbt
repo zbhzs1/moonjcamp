@@ -153,6 +153,85 @@ pub(all) struct Spectrum {
 }
 
 ///|
+#derive(Eq, @debug.Debug, ToJson)
+pub(all) struct NtupleVariable {
+  name : String
+  symbol : String
+  role : String
+  form : String
+  dimension : Int32
+  units : String
+  first : Double
+  last : Double
+  minimum : Double
+  maximum : Double
+  factor : Double
+}
+
+///|
+pub extend NtupleVariable with Eq::{equal, not_equal}
+
+///|
+pub extend NtupleVariable with @debug.Debug::{to_repr}
+
+///|
+pub extend NtupleVariable with ToJson::{to_json}
+
+///|
+#derive(Eq, @debug.Debug, ToJson)
+pub(all) struct NtuplePage {
+  number : Int32
+  variable_symbol : String
+  points : Array[Point]
+}
+
+///|
+pub extend NtuplePage with Eq::{equal, not_equal}
+
+///|
+pub extend NtuplePage with @debug.Debug::{to_repr}
+
+///|
+pub extend NtuplePage with ToJson::{to_json}
+
+///|
+#derive(@debug.Debug, ToJson)
+pub(all) struct NtupleDataset {
+  title : String
+  version : String
+  data_type : String
+  ntuples_type : String
+  records : Array[Record]
+  variables : Array[NtupleVariable]
+  pages : Array[NtuplePage]
+  source_line : Int32
+}
+
+///|
+pub extend NtupleDataset with @debug.Debug::{to_repr}
+
+///|
+pub extend NtupleDataset with ToJson::{to_json}
+
+///|
+#derive(@debug.Debug, ToJson)
+pub(all) struct NtupleWriteOptions {
+  encoding : Encoding
+  points_per_line : Int32
+}
+
+///|
+pub extend NtupleWriteOptions with @debug.Debug::{to_repr}
+
+///|
+pub extend NtupleWriteOptions with ToJson::{to_json}
+
+///|
+pub fn NtupleWriteOptions::default() -> NtupleWriteOptions {
+  { encoding: Difference, points_per_line: 8, }
+}
+
+///|
 #derive(@debug.Debug, ToJson)
 pub(all) struct Report {
   valid : Bool
